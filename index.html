@@ -603,6 +603,15 @@
                 } else if(halfHearts > 0 && fullHearts == 0){
                     ctx.drawImage(hud, 636, 117, 8, 8, 176, 40, 8, 8);
                 }
+
+                ctx.fillStyle = "black";
+                ctx.fillRect(96, 10, 24, 50);
+
+                if(rupeeAmount < 100){
+                    ctx.drawImage(hud, 519, 117, 8, 8, 96, 16, 8, 8);
+                    let firstNum = rupeeAmount % 10;
+                    ctx.drawImage(hud, 528 + (8*firstNum) + firstNum, 117, 8, 8, 96 + 16, 16, 8, 8);
+                }
             }
 
             function draw() {
