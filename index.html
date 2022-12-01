@@ -73,6 +73,12 @@
                 this.gameobjects = o;
             }
 
+            function playSound(source){
+                let sound = new Audio();
+                sound.src = source;
+                sound.play();
+            }
+
             function keyDownHandler(e) {
                 if(e.keyCode == 37){
                     leftPressed = true;
@@ -446,6 +452,7 @@
                                         lastPickUpItem = gameObjects[i].pickUpItemNum;
                                         swordEquipped = 1;
                                         animationCounter = 0;
+                                        playSound("./sounds/item.mp3")
                                 }
                                 objects.splice(i, 1);
                                 animationCounter = 0;
@@ -504,7 +511,7 @@
                                 break;
                             case 14: 
                                 ctx.drawImage(hud, 555, 137, 8, 16, gameObjects[i].x, gameObjects[i].y, 8, 16);
-                                break;
+                                break; 
                         }
                     }
                     if(gameObjects[i].isText){
@@ -512,8 +519,10 @@
                         if(gameObjects[i].counter%5 == 0) {
                             if(gameObjects[i].line1Full.length != gameObjects[i].line1Current.length) {
                                 gameObjects[i].line1Current = gameObjects[i].line1Full.substring(0, gameObjects[i].line1Current.length + 1);
+                                playSound("./sounds/LOZ_text_slow.wav");
                             } else if(gameObjects[i].line2Full.length != gameObjects[i].line2Current.length) {
                                 gameObjects[i].line2Current = gameObjects[i].line2Full.substring(0, gameObjects[i].line2Current.length + 1);
+                                playSound("./sounds/LOZ_text_slow.wav");
                             }
                         }
                         ctx.fillStyle = "white";
