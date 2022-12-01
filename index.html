@@ -47,6 +47,9 @@
             let keyAmount = 1;
             let bombAmount = 5;
             let swordEquipped = 0;
+            let hasSword = false;
+            let isAttacking = false;
+            let canAttackAgain = true;
 
             function GameObject(){
                 this.x = 0;
@@ -126,6 +129,12 @@
                 } else if(e.keyCode == 40){
                     downPressed = false;
                 }
+                if(e.keyCode == 32 && canAttackAgain && hasSword) {
+                    isAttacking = true;
+                    currentAnimation = 0;
+                    canAttackAgain = false;
+                    playSound("./sounds/LOZ_sword_slash.wav");
+                }
             }
 
             function drawLink(){
@@ -187,7 +196,45 @@
                                 break;
                         }
                 } else {
-                    if(leftPressed && !collision(linkX - speed, linkY, gameMap)){
+                    if(isAttacking && hasSword) {
+                        if(currentAnimation == 0){
+                            if(lastButtonPressed == "down"){
+                                ctx.drawImage(link, 0, 60, 16, 16, linkX, linkY, 16, 16);
+                            } 
+                            if(lastButtonPressed == "up"){
+                                ctx.drawImage(link, 62, 60, 16, 16, linkX, linkY, 16, 16);
+                            } 
+                            if(lastButtonPressed == "left"){
+                                ctx.drawImage(link, 30, 60, 16, 16, linkX, linkY, 16, 16);
+                            } 
+                            if(lastButtonPressed == "right") {
+                                ctx.drawImage(link, 91, 60, 16, 16, linkX, linkY, 16, 16);
+                            }
+                        }
+                        if(currentAnimation == 1){
+                            if(lastButtonPressed == "down"){
+                                ctx.drawImage(link, 0, 84, 16, 27, linkX, linkY, 16, 27);
+                            }
+                            if(lastButtonPressed == "up"){
+                                ctx.drawImage(link, 62, 84, 16, 26, linkX, linkY - 14, 16, 26);
+                            } 
+                            if(lastButtonPressed == "left"){
+                                ctx.drawImage(link, 22, 84, 26, 27, linkX - 10, linkY - 8, 27, 27);
+                            }
+                            if(lastButtonPressed == "right")  {
+                                ctx.drawImage(link, 84, 84, 30, 26, linkX, linkY - 8, 30, 27);
+                            }
+                        }
+                        if(animationCounter >= 6){
+                            currentAnimation++;
+                            animationCounter = 0;
+                            if(currentAnimation > 1) {
+                                currentAnimation = 0;
+                                isAttacking = false;
+                                canAttackAgain = true;
+                            }
+                        }
+                    } else if(leftPressed && !collision(linkX - speed, linkY, gameMap)){
                         linkX -= speed;
                         if(currentAnimation == 0){
                             ctx.drawImage(link, 30, 0, 16, 16, linkX, linkY, 16, 16);
@@ -482,6 +529,7 @@
                                         lastPickUpItem = gameObjects[i].pickUpItemNum;
                                         swordEquipped = 1;
                                         animationCounter = 0;
+                                        hasSword = true;
                                         playSound("./sounds/item.mp3")
                                 }
                                 objects.splice(i, 1);
