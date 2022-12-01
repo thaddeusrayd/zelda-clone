@@ -611,7 +611,30 @@
                     ctx.drawImage(hud, 519, 117, 8, 8, 96, 16, 8, 8);
                     let firstNum = rupeeAmount % 10;
                     ctx.drawImage(hud, 528 + (8*firstNum) + firstNum, 117, 8, 8, 96 + 16, 16, 8, 8);
+                    let secondNum = Math.floor(rupeeAmount / 10);
+                    ctx.drawImage(hud, 528 + (8*secondNum) + secondNum, 117, 8, 8, 96 + 8, 16, 8, 8);
+                } else {
+                    let firstNum = rupeeAmount % 10;
+                    ctx.drawImage(hud, 528 + (8*firstNum) + firstNum, 117, 8, 8, 96 + 16, 16, 8, 8);
+                    let thirdNum = Math.floor(rupeeAmount / 100) * 100;
+                    let secondNum = ((rupeeAmount - thirdNum) - firstNum) / 10;
+                    ctx.drawImage(hud, 528 + (8*secondNum) + secondNum, 117, 8, 8, 96 + 8, 16, 8, 8);
+                    thirdNum = Math.floor(rupeeAmount / 100);
+                    ctx.drawImage(hud, 528 + (8 * thirdNum) + thirdNum, 117, 8, 8, 96, 16, 8, 8);
                 }
+
+                ctx.drawImage(hud, 519, 117, 8, 8, 96, 32, 8, 8);
+                ctx.drawImage(hud, 519, 117, 8, 8, 96, 41, 8, 8);
+                ctx.drawImage(hud, 528 + (8*keyAmount) + keyAmount, 117, 8, 8, 96 + 8, 32, 8, 8);
+                ctx.drawImage(hud, 528 + (8*bombAmount) + bombAmount, 117, 8, 8, 96 + 8, 41, 8, 8);
+
+                ctx.fillRect(128, 24, 8, 16);
+                ctx.fillRect(152, 24, 8, 16);
+                if(swordEquipped == 1){
+                    ctx.drawImage(hud, 555, 137, 8, 16, 152, 24, 8, 16);
+                }
+                ctx.fillStyle = "gray";
+                ctx.fillRect(16, 8, 64, 48);
             }
 
             function draw() {
