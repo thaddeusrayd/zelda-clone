@@ -43,6 +43,11 @@
                 this.isPortal = false;
             }
 
+            function MapBundle(m, o){
+                this.map = m;
+                this.gameobjects = o;
+            }
+
             function keyDownHandler(e) {
                 if(e.keyCode == 37){
                     leftPressed = true;
@@ -75,7 +80,7 @@
                 let speed = 2;
                 animationCounter++;
                 
-                if(leftPressed && !collision(linkX - speed, linkY, map7_7)){
+                if(leftPressed && !collision(linkX - speed, linkY, gameMap)){
                     linkX -= speed;
                     if(currentAnimation == 0){
                         ctx.drawImage(link, 30, 0, 16, 16, linkX, linkY, 16, 16);
@@ -89,7 +94,7 @@
                             currentAnimation = 0;
                         }
                     }
-                } else if(rightPressed && !collision(linkX + speed, linkY, map7_7)){
+                } else if(rightPressed && !collision(linkX + speed, linkY, gameMap)){
                     linkX += speed;
                     if(currentAnimation == 0){
                         ctx.drawImage(link, 91, 0, 16, 16, linkX, linkY, 16, 16);
@@ -103,7 +108,7 @@
                             currentAnimation = 0;
                         }
                     }
-                } else if(upPressed && !collision(linkX, linkY - speed, map7_7)){
+                } else if(upPressed && !collision(linkX, linkY - speed, gameMap)){
                     linkY -= speed;
                     if(currentAnimation == 0){
                         ctx.drawImage(link, 62, 0, 16, 16, linkX, linkY, 16, 16);
@@ -117,7 +122,7 @@
                             currentAnimation = 0;
                         }
                     }
-                } else if(downPressed && !collision(linkX, linkY + speed, map7_7)){
+                } else if(downPressed && !collision(linkX, linkY + speed, gameMap)){
                     linkY += speed;
                     if(currentAnimation == 0){
                         ctx.drawImage(link, 0, 0, 16, 16, linkX, linkY, 16, 16);
@@ -160,6 +165,21 @@
             [ 61, 61,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 61, 61],
             [ 61, 61, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 61, 61],
             [ 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61]];
+            let objects7_7 = [];
+
+            let gO = new GameObject();
+            gO.x = 72;
+            gO.y = 72;
+            gO.width = 8;
+            gO.height = 16;
+            gO.newMap = 1;
+            gO.newLinkX = 120;
+            gO.newLinkY = 220;
+            gO.isPortal = true;
+            objects7_7.push(gO);
+
+            let bundle = new MapBundle(map7_7, objects7_7);
+            maps.push(bundle);
 
             ///////////////////////////////////////////////////////////////////
             let mapWoodSword = [
@@ -178,6 +198,34 @@
             [ 55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
             [ 55, 55, 37, 37, 37, 37, 37, 28, 28, 37, 37, 37, 37, 37, 55, 55],
             [ 55, 55, 55, 55, 55, 55, 55, 28, 28, 55, 55, 55, 55, 55, 55, 55]];
+            let gameObjectsWoodSword = [];
+
+            gO = new GameObject();
+            gO.x = 112;
+            gO.y = 240;
+            gO.width = 16;
+            gO.height = 16;
+            gO.newMap = 0;
+            gO.newLinkX = 68;
+            gO.newLinkY = 96;
+            gO.isPortal = true;
+            gameObjectsWoodSword.push(gO);
+
+            gO = new GameObject();
+            gO.x = 128;
+            gO.y = 240;
+            gO.width = 16;
+            gO.height = 16;
+            gO.newMap = 0;
+            gO.newLinkX = 68;
+            gO.newLinkY = 96;
+            gO.isPortal = true;
+            gameObjectsWoodSword.push(gO);
+
+            bundle = new MapBundle(mapWoodSword, gameObjectsWoodSword);
+            maps.push(bundle);
+            gameMap = maps[0].map;
+            gameObjects = maps[0].gameobjects;
 
             function drawMap(level){
                 for(let i=0; i<level.length; i++) {
@@ -192,7 +240,7 @@
             function collision(x, y, map) {
                 for(let i=0; i<map.length; i++) {
                     for(let j=0; j<map[i].length; j++) {
-                        if (map[i][j] != 2){
+                        if (map[i][j] != 2 && map[i][j] != 28){
                             if(x <= j*16 + 16 && 
                             x + 12 >= j*16 &&
                             y + 10 <= i*16 + 16 &&
@@ -206,14 +254,36 @@
                 return false;
             }
 
+            function gameObjectCollision(x, y, objects, isLink) {
+                if(isLink) 
+                {
+                    for(let i = 0; i < objects.length; i++)
+                    {
+                        if(x <= objects[i].x + objects[i].width &&
+                        x + 16 >= objects[i].x &&
+                        y <= objects[i].y + objects[i].height &&
+                        y + 16 >= objects[i].y) 
+                        {
+                            if(objects[i].isPortal) {
+                                gameMap = maps[objects[i].newMap].map;
+                                gameObjects = maps[objects[i].newMap].gameobjects;
+                                linkX = objects[i].newLinkX;
+                                linkY = objects[i].newLinkY;
+                            }
+                        }
+                    }
+                }
+            }
+
             function draw() {
                 setTimeout(function() {
                     requestAnimationFrame(draw);
                     ctx.fillStyle = "rgb(20,20,20)";
                     ctx.fillRect(0,0,256,240);
                     ///all code goes here
-                    drawMap(map7_7);
+                    drawMap(gameMap);
                     drawLink();
+                    gameObjectCollision(linkX, linkY, gameObjects, true);
                 },1000/fps);
             }
             draw();
