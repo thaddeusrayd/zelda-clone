@@ -214,21 +214,21 @@
                         if(currentAnimation == 1){
                             if(lastButtonPressed == "down"){
                                 ctx.drawImage(link, 0, 84, 16, 27, linkX, linkY, 16, 27);
-                                gameObjectCollision(linkX + 7, linkY + 16, gameObjects, false, true);
+                                gameObjectCollision(linkX + 7, linkY + 16, gameObjects, false, true, "down");
                             }
                             if(lastButtonPressed == "up"){
                                 ctx.drawImage(link, 62, 84, 16, 26, linkX, linkY - 14, 16, 26);
-                                gameObjectCollision(linkX + 3, linkY - 14, gameObjects, false, true);
+                                gameObjectCollision(linkX + 3, linkY - 14, gameObjects, false, true, "up");
 
                             } 
                             if(lastButtonPressed == "left"){
                                 ctx.drawImage(link, 22, 84, 26, 27, linkX - 10, linkY - 8, 27, 27);
-                                gameObjectCollision(linkX - 8, linkY + 5, gameObjects, false, true);
+                                gameObjectCollision(linkX - 8, linkY + 5, gameObjects, false, true, "left");
 
                             }
                             if(lastButtonPressed == "right")  {
                                 ctx.drawImage(link, 84, 84, 30, 26, linkX, linkY - 8, 30, 27);
-                                gameObjectCollision(linkX + 14, linkY + 5, gameObjects, false, true);
+                                gameObjectCollision(linkX + 14, linkY + 5, gameObjects, false, true, "right");
 
                             }
                         }
@@ -470,7 +470,7 @@
                 return false;
             }
 
-            function gameObjectCollision(x, y, objects, isLink, isSword) {
+            function gameObjectCollision(x, y, objects, isLink, isSword, direction) {
                 if(isLink) 
                 {
                     for(let i = 0; i < objects.length; i++)
@@ -551,23 +551,117 @@
                         swordW = 3;
                         swordH = 11;
                     }
-                    for(let i= 0; i < objects.length; i++){
-                        
+                    for(let i = 0; i < objects.length; i++){
+                        if(lastButtonPressed == "left") {
                             if(x <= objects[i].x + objects[i].width && 
                                 x + swordW >= objects[i].x &&
                                 y <= objects[i].y + objects[i].height &&
                                 y + swordH >= objects[i].y) 
                             {
                                 if(objects[i].isEnemy) {
+                                    objects[i].needsBounce = true;
+                                    getBounceLoc(objects[i], false, direction);
                                     objects[i].health -= 1;
-                                    if(objects[i].health <= 0) {
+                                    if(objects[i].health == 0) {
                                         playSound("./sounds/LOZ_enemy_die.wav")
                                     } else {
                                         playSound("./sounds/LOZ_enemy_hit.wav")
                                     }
                                 }
                             }
-                        
+                        } else if(lastButtonPressed == "right") {
+                            if(x <= objects[i].x + objects[i].width && 
+                                x + swordW >= objects[i].x &&
+                                y <= objects[i].y + objects[i].height &&
+                                y + swordH >= objects[i].y) 
+                            {
+                                if(objects[i].isEnemy) {
+                                    objects[i].needsBounce = true;
+                                    getBounceLoc(objects[i], false, direction);
+                                    objects[i].health -= 1;
+                                    if(objects[i].health == 0) {
+                                        playSound("./sounds/LOZ_enemy_die.wav")
+                                    } else {
+                                        playSound("./sounds/LOZ_enemy_hit.wav")
+                                    }
+                                }
+                            }
+                        } else if(lastButtonPressed == "up") {
+                            if(x <= objects[i].x + objects[i].width && 
+                                x + swordW >= objects[i].x &&
+                                y <= objects[i].y + objects[i].height &&
+                                y + swordH >= objects[i].y) 
+                            {
+                                if(objects[i].isEnemy) {
+                                    objects[i].needsBounce = true;
+                                    getBounceLoc(objects[i], false, direction);
+                                    objects[i].health -= 1;
+                                    if(objects[i].health == 0) {
+                                        playSound("./sounds/LOZ_enemy_die.wav")
+                                    } else {
+                                        playSound("./sounds/LOZ_enemy_hit.wav")
+                                    }
+                                }
+                            }
+                        } else {
+                            if(x <= objects[i].x + objects[i].width && 
+                                x + swordW >= objects[i].x &&
+                                y <= objects[i].y + objects[i].height &&
+                                y + swordH >= objects[i].y) 
+                            {
+                                if(objects[i].isEnemy) {
+                                    objects[i].needsBounce = true;
+                                    getBounceLoc(objects[i], false, direction);
+                                    objects[i].health -= 1;
+                                    if(objects[i].health == 0) {
+                                        playSound("./sounds/LOZ_enemy_die.wav")
+                                    } else {
+                                        playSound("./sounds/LOZ_enemy_hit.wav")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            function getBounceLoc(gObject, ignoresObjects, direction) {
+                let currRow = Math.floor(gObject.y/16);
+                let currCol = Math.floor(gObject.x/16);
+                if(direction == "up") {
+                    if(gameMap[currRow-1][currCol] == 2) {
+                        gObject.bounceY = gObject.y - 16;
+                        gObject.bounceX = gObject.x;
+                    } else {
+                        gObject.bounceY = gObject.y;
+                        gObject.bounceX = gObject.x;
+                    }
+                }
+                if(direction == "down") {
+                    if(gameMap[currRow+1][currCol] == 2) {
+                        gObject.bounceY = gObject.y + 16;
+                        gObject.bounceX = gObject.x;
+                    } else {
+                        gObject.bounceY = gObject.y;
+                        gObject.bounceX = gObject.x;
+                    }
+                }
+                if(direction == "left") {
+                    if(gameMap[currRow][currCol-1] == 2) {
+                        gObject.bounceX = gObject.x - 16;
+                        gObject.bounceY = gObject.y;
+                    } else {
+                        gObject.bounceX = gObject.x;
+                        gObject.bounceY = gObject.y;
+                    }
+                }
+                if(direction == "right") {
+                    if(gameMap[currRow][currCol+1] == 2) {
+                        gObject.bounceX = gObject.x + 16;
+                        gObject.bounceY = gObject.y;
+                    } else {
+                        gObject.bounceX = gObject.x;
+                        gObject.bounceY = gObject.y;
                     }
                 }
             }
@@ -700,9 +794,27 @@
                                     ctx.drawImage(enemies, 90, 30, 16, 16, gameObjects[i].x, gameObjects[i].y, 16, 16);
                                 }
                             }
+                            if(gameObjects[i].needsBounce) {
+                                if(gameObjects[i].x != gameObjects[i].bounceX) {
+                                    if(gameObjects[i].bounceX > gameObjects[i].x) {
+                                        gameObjects[i].x += 4;
+                                    } else {
+                                        gameObjects[i].x -= 4;
+                                    }
+                                }
+                                if(gameObjects[i].y != gameObjects[i].bounceY) {
+                                    if(gameObjects[i].bounceY > gameObjects[i].y) {
+                                        gameObjects[i].y += 4;
+                                    } else {
+                                        gameObjects[i].y -= 4;
+                                    }
+                                } else {
+                                    gameObjects[i].needsBounce = false;
+                                }
+                            }
                         }
                     }
-                }
+                }   
             }
 
             function drawHUD(){
