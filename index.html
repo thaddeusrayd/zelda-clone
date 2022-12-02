@@ -877,7 +877,55 @@ function drawGameObjects()
 			if(gameObjects[i].enemyType == 1)
 			{
 				gameObjects[i].counter++;
-				
+				if(gameObjects[i].enemyPath == null || gameObjects[i].enemyPath.length == 0) {
+					let currRow = Math.floor(gameObjects[i].y/16);
+					let currCol = Math.floor(gameObjects[i].x/16);
+					getNewCoordinates(currRow, currCol, i);
+				}
+
+				if(gameObjects[i].needsToShoot) {
+					gameObjects[i].shootCounter++;
+					if(gameObjects[i].shootCounter == 100) {
+						gO = new GameObject();
+						gO.x = gameObjects[i].x;
+						gO.y = gameObjects[i].y;
+						if(gameObjects[i].direction == "down") {
+							gO.ySpeed = 2;
+						}
+						if(gameObjects[i].direction == "up") {
+							gO.ySpeed = -2;
+						}
+						if(gameObjects[i].direction == "right") {
+							gO.xSpeed = 2;
+						}
+						if(gameObjects[i].direction == "left") {
+							gO.xSpeed = -2;
+						}
+						gO.waterProjectile = false;
+						gO.isPortal = false;
+						gO.isRupee = false;
+						gO.rockProjectile = true;
+						gameObjects.push(gO);
+					}
+					if(gameObjects[i].shootCounter > 130) {
+						gameObjects[i].needsToShoot = false;
+						gameObjects[i].shootCounter = 0;
+					}
+				} else {
+					if(gameObjects[i].enemyPath[gameObjects[i].enemyPath.length - 1] != null &&
+					gameObjects[i].nextX == gameObjects[i].x &&
+					gameObjects[i].nextY == gameObjects[i].y) {
+						gameObjects[i].nextX = gameObjects[i].enemyPath[gameObjects[i].enemyPath.length-1].c * 16;
+						gameObjects[i].nextY = gameObjects[i].enemyPath[gameObjects[i].enemyPath.length-1].r * 16;
+						gameObjects[i].enemyPath.splice(gameObjects[i].enemyPath.length - 1, 1);
+
+						let chance = Math.floor(Math.random() * 60);
+						if(chance == 0) {
+							gameObjects[i].needsToShoot = true;
+						}
+					}
+				}
+
 				if(gameObjects[i].counter >= 10)
 				{
 					gameObjects[i].frame++;
@@ -989,7 +1037,43 @@ function drawGameObjects()
 					}
 				}
 				
-				
+				else if (gameObjects[i].enemyPath.length != 0) {
+					if(gameObjects[i].x != gameObjects[i].nextX) {
+						if(gameObjects[i].nextX > gameObjects[i].x) {
+							if(gameObjects[i].counter % gameObjects[i].speed == 0) {
+								gameObjects[i].x += 2;
+							}
+							gameObjects[i].direction = "right";
+						}
+						else if(gameObjects[i].nextX < gameObjects[i].x) {
+							if(gameObjects[i].counter % gameObjects[i].speed == 0) {
+								gameObjects[i].x -= 2;
+							}
+							gameObjects[i].direction = "left";
+						}
+						
+					}
+					else if(gameObjects[i].y != gameObjects[i].nextY) {
+						if(gameObjects[i].nextY > gameObjects[i].y) {
+							if(gameObjects[i].counter % gameObjects[i].speed == 0) {
+								gameObjects[i].y += 2;
+							}
+							gameObjects[i].direction = "down";
+						}
+						else if(gameObjects[i].nextY < gameObjects[i].y) {
+							if(gameObjects[i].counter % gameObjects[i].speed == 0) {
+								gameObjects[i].y -= 2;
+							}
+							gameObjects[i].direction = "up";
+						}
+						
+					}
+					else if (gameObjects[i].enemyPath.length == 1) {
+						gameObjects[i].enemyPath = [];
+						gameObjects[i].x = gameObjects[i].nextX;
+						gameObjects[i].y = gameObjects[i].nextY;
+					}
+				}
 			}
 		}
 		if(gameObjects[i].isRupee) {
@@ -1013,6 +1097,102 @@ function drawGameObjects()
 			}
 		}
 		
+	}
+}
+
+function getNewCoordinates(currentRow, currentCol, index) {
+	let randRow = Math.floor(Math.random() * 11) + 4;
+	let randCol = Math.floor(Math.random() * 15);
+	while(gameMap[randRow][randCol] != 2) {
+		randRow = Math.floor(Math.random() * 11) + 4;
+		randCol = Math.floor(Math.random() * 15);
+	}
+
+	gameObjects[index].enemyPath = aStar(new Pos(currentRow, currentCol), new Pos(randRow, randCol), gameMap);
+
+	while(gameObjects[index].enemyPath == 0) {
+		randRow = Math.floor(Math.random() * 11) + 4;
+		randCol = Math.floor(Math.random() * 15);
+	}
+}
+
+function Pos(row, col) {
+	this.r = row;
+	this.c = col;
+}
+
+function Node(parent, position) {
+	this.parent = parent;
+	this.position = position;
+	
+	this.g = 0;
+	this.h = 0;
+	this.f = 0;
+}
+
+function aStar(start, end, maze) {
+	start_Node = new Node(null, start);
+	end_Node = new Node(null, end);
+	let open_list = [];
+	let closed_list = [];
+
+	open_list.push(start_Node);
+
+	while(open_list.length > 0) {
+		current_node = open_list[0];
+		current_index = 0;
+		for(let i = 0; i < open_list.length; i++){
+			if(open_list[i].f < current_node.f) {
+				current_node = open_list[i];
+				current_index = i;
+			}
+		}
+		open_list.splice(current_index, 1);
+		closed_list.push(current_node);
+
+		if(current_node.position.r == end_Node.position.r && current_node.position.c == end_Node.position.c) {
+			let path = [];
+			let current = current_node;
+			while(current != null) {
+				path.push(current.position);
+				current = current.parent;
+			}
+			return path;
+		}
+		let children = [];
+		let positions = [new Pos(0, -1), new Pos(0, 1), new Pos(1, 0), new Pos(-1, 0)];
+		for(let i =0; i< positions.length; i++){
+			node_position = new Pos(current_node.position.r + positions[i].r, current_node.position.c + positions[i].c);
+			if(node_position.r > (maze.length - 1) || node_position.r < 0 || 
+			node_position.c > maze[0].length - 1 || node_position.c < 0) {
+				continue;
+			}
+			if(maze[node_position.r][node_position.c] != 2) {
+				continue;
+			}
+			let new_Node = new Node(current_node, node_position);
+			children.push(new_Node);
+		}
+		for (let i = 0; i < children.length; i++) {
+			for(let j = 0; j < closed_list.length; j++) {
+				if(children[i].position.r == closed_list[j].position.r &&
+				children[i].position.c == closed_list[j].position.c) {
+					continue;
+				}
+			}
+			children[i].g = current_node.g + 1;
+			children[i].h = ((children[i].position.r - end_Node.position.r) * (children[i].position.r - end_Node.position.r)) + ((children[i].position.c - end_Node.position.c) * (children[i].position.c - end_Node.position.c));
+			children[i].f = children[i].g + children[i].h;
+
+			for (let j=0; j< open_list.length; j++) {
+				if(children[i].position.r == open_list[j].position.r &&
+				children[i].position.c == open_list[j].position.c &&
+				children[i].g > open_list[j].g) {
+					continue;
+				}
+			}
+			open_list.push(children[i]);
+		}
 	}
 }
 
@@ -1220,7 +1400,7 @@ function addMapGameObjects(levelMap, objectArray)
 					gO.width = 16;
 					gO.height = 16;
 					gO.newMap = currentMap - 1;
-					gO.newLinkX = 223;
+					gO.newLinkX = 223 + 16;
 					gO.newLinkY = (i * 16) - 1;
 					gO.isPortal = true;
 					gO.shiftsLeftRight = true;
