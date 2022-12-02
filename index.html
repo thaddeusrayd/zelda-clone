@@ -55,7 +55,7 @@ let hasSword = false;
 let isAttacking = false;
 let canAttackAgain = true;
 
-gameObjects = maps[119].gameObjects;
+gameObjects = maps[119].gameobjects;
 gameMap = maps[119].map;
 let currentMap = 119;
 addMapGameObjects(gameMap, gameObjects);
@@ -66,7 +66,6 @@ function playSound(source)
 	sound.src = source;
 	sound.play();
 }
-
 
 function keyDownHandler(e){
     if(e.keyCode == 37)
@@ -116,7 +115,6 @@ function keyUpHandler(e){
 	   downPressed = false;
 	}
 }
-
 
 function drawLink()
 {
@@ -382,150 +380,6 @@ function drawLink()
 	}
 }
 
-let map7_7 = [
-[ 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22],
-[ 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22],
-[ 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22],
-[ 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22],
-[ 61, 61, 61, 61, 61, 61, 61,  2,  2, 61, 61, 61, 61, 61, 61, 61],
-[ 61, 61, 61, 61, 28, 61, 62,  2,  2, 61, 61, 61, 61, 61, 61, 61],
-[ 61, 61, 61, 62,  2,  2,  2,  2,  2, 61, 61, 61, 61, 61, 61, 61],
-[ 61, 61, 62,  2,  2,  2,  2,  2,  2, 61, 61, 61, 61, 61, 61, 61],
-[ 61, 62,  2,  2,  2,  2,  2,  2,  2, 60, 61, 61, 61, 61, 61, 61],
-[  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2],
-[ 43, 44,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 43, 43],
-[ 61, 61,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 61, 61],
-[ 61, 61,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2, 61, 61],
-[ 61, 61, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 61, 61],
-[ 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61]];
-
-let gO = new GameObject()
-gO.x = 72;
-gO.y = 72;
-gO.width = 8;
-gO.height = 16;
-gO.newMap = 1;
-gO.newLinkX = 120;
-gO.newLinkY = 220;
-gO.isPortal = true;
-let objects7_7 = [];
-objects7_7.push(gO);
-
-///added for lesson 10
-gO = new GameObject()
-gO.x = 160;
-gO.y = 184;
-gO.nextX = 160;
-gO.nextY = 184;
-gO.width = 16;
-gO.height = 16;
-gO.isEnemy = true;
-gO.enemyType = 1;
-gO.isAttacking = false;
-gO.health = 1;
-gO.direction = "up";
-objects7_7.push(gO);
-
-let bundle = new MapBundle(map7_7, objects7_7);
-maps.push(bundle);
-
-
-
-///////////////////////////////////////////////////////////////////
-let mapWoodSword = [
-[ 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22],
-[ 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22],
-[ 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22],
-[ 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22],
-[ 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55],
-[ 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55],
-[ 55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
-[ 55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
-[ 55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
-[ 55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
-[ 55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
-[ 55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
-[ 55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
-[ 55, 55, 37, 37, 37, 37, 37, 28, 28, 37, 37, 37, 37, 37, 55, 55],
-[ 55, 55, 55, 55, 55, 55, 55, 28, 28, 55, 55, 55, 55, 55, 55, 55]];
-let gameObjectsWoodSword = [];
-
-///added the old man, flames and text
-gO = new GameObject()
-gO.x = (4*16) + 8;
-gO.y = (8*16);
-gO.width = 16;
-gO.height = 16;
-gO.isFlame= true;
-gameObjectsWoodSword.push(gO);
-
-gO = new GameObject()
-gO.x = (10*16) + 8;
-gO.y = (8*16);
-gO.width = 16;
-gO.height = 16;
-gO.isFlame= true;
-gameObjectsWoodSword.push(gO);
-
-gO = new GameObject()
-gO.x = (7*16) + 8;
-gO.y = (8*16);
-gO.width = 16;
-gO.height = 16;
-gO.isOldMan= true;
-gameObjectsWoodSword.push(gO);
-
-gO = new GameObject();
-gO.isText = true;
-gO.line1Full = "IT'S DANGEROUS TO GO";
-gO.line2Full = "ALONE! TAKE THIS.";
-gO.line1X = 3 * 16;
-gO.line1Y = 7 * 16;
-gO.line2X = 4 * 16;
-gO.line2Y = (8 * 16) - 6;
-gameObjectsWoodSword.push(gO);
-
-
-///Portal variables
-gO = new GameObject()
-gO.x = 112;
-gO.y = 240;
-gO.width = 16;
-gO.height = 16;
-gO.newMap = 0;
-gO.newLinkX = 68;
-gO.newLinkY = 96;
-gO.isPortal = true;
-gameObjectsWoodSword.push(gO);
-
-gO = new GameObject()
-gO.x = 128;
-gO.y = 240;
-gO.width = 16;
-gO.height = 16;
-gO.newMap = 0;
-gO.newLinkX = 68;
-gO.newLinkY = 96;
-gO.isPortal = true;
-gameObjectsWoodSword.push(gO);
-
-//sword
-gO = new GameObject()
-gO.x = (8*16)-4;
-gO.y = (9.5*16);
-gO.width = 8;
-gO.height = 16;
-gO.isPickUpItem = true;
-gO.pickUpItemNum = 14;
-gameObjectsWoodSword.push(gO);
-
-bundle = new MapBundle(mapWoodSword, gameObjectsWoodSword);
-maps.push(bundle);
-
-gameMap = maps[0].map;
-gameObjects = maps[0].gameobjects;
-
-
 function drawMap(level)
 {
 	for(let i = 0; i < level.length; i++)
@@ -574,9 +428,17 @@ function gameObjectCollision(x, y, objects, isLink, isSword, direction)
 					   {
 						   gameMap = maps[objects[i].newMap].map;
 						   gameObjects = maps[objects[i].newMap].gameobjects;
-						   linkX = objects[i].newLinkX;
-						   linkY = objects[i].newLinkY;
-						   
+						   currentMap = objects[i].newMap;
+						   addMapGameObjects(gameMap, gameObjects);
+						   if(objects[i].shiftsLeftRight) {
+								linkX = objects[i].newLinkX;	
+							} else if (objects[i].shiftsUpDown) {
+								linkY = objects[i].newLinkY;
+							} else {
+								linkX = objects[i].newLinkX;	
+								linkY = objects[i].newLinkY;
+							}
+							continue;
 						}
 						else if(objects[i].isRupee) {
 							rupeeAmount += objects[i].rupeeValue;
@@ -880,7 +742,6 @@ function getBounceLoc(gObject, ignoresObjects, direction)
 		}
 	}
 }
-
 
 function drawGameObjects()
 {
@@ -1287,16 +1148,32 @@ function drawHUD()
 	ctx.fillRect(16, 8, 64, 48);
 }
 
-function addMapGameObjects(levelMap, objectArray) {
-	let linkCanWalkSpaces = [2,28,18,6,12,14,24,30,34,58,64,70,75,76,77,
-	93,94,95,111,112,113,81,82,86,99,100,101,117,118,119,87,88,89,105,
-	106,107,123,124,125,126,127,128,129,131,132,133,134,135,137,138,139,
-	140,141,143];
+function alreadyContainsPortal(x, y)
+{
+	for(let i = 0; i < gameObjects.length; i++)
+	{
+		if(gameObjects[i].x == x && gameObjects[i].y == y && gameObjects[i].isPortal)
+		{
+			return true;
+		}
+	}
+}
 
-	for(let i = 4; i < levelMap.length; i++) {
-		for(let j = 0; j < levelMap[0].length; j++) {
-			if (i == 4) {
-				if(linkCanWalkSpaces.includes(levelMap[i][j])) {
+function addMapGameObjects(levelMap, objectArray)
+{
+	let linkCanWalkSpaces = [2,28,18,6,12,14,24,30,34,58,64,70,75,76,77,
+			93,94,95,111,112,113,81,82,86,99,100,101,117,118,119,87,88,89,105,
+			106,107,123,124,125,126,127,128,129,131,132,133,134,135,137,138,139,
+			140,141,143];
+	
+	for (i = 4; i < levelMap.length; i++)
+	{
+		for (j = 0; j < levelMap[0].length; j++)
+		{
+			if(i == 4)
+			{
+				if(linkCanWalkSpaces.includes(levelMap[i][j]))
+				{
 					gO = new GameObject();
 					gO.x = j * 16;
 					gO.y = 3 * 16;
@@ -1307,7 +1184,70 @@ function addMapGameObjects(levelMap, objectArray) {
 					gO.newLinkY = 223;
 					gO.isPortal = true;
 					gO.shiftsUpDown = true;
-					gameObjects.push(gO);
+					if(!alreadyContainsPortal(j * 16, 3 * 16))
+					{
+						gameObjects.push(gO);
+					}
+				}
+			}
+			if(i == 14)
+			{
+				if(linkCanWalkSpaces.includes(levelMap[i][j]))
+				{
+					gO = new GameObject();
+					gO.x = j * 16;
+					gO.y = (i + 1) * 16;
+					gO.width = 16;
+					gO.height = 16;
+					gO.newMap = currentMap + 16;
+					gO.newLinkX = (j * 16) + 1;
+					gO.newLinkY = 81;
+					gO.isPortal = true;
+					gO.shiftsUpDown = true;
+					if(!alreadyContainsPortal(j * 16, (i + 1) * 16))
+					{
+						gameObjects.push(gO);
+					}
+				}
+			}
+			if(j == 0)
+			{
+				if(linkCanWalkSpaces.includes(levelMap[i][j]))
+				{
+					gO = new GameObject();
+					gO.x = -16;
+					gO.y = i * 16;
+					gO.width = 16;
+					gO.height = 16;
+					gO.newMap = currentMap - 1;
+					gO.newLinkX = 223;
+					gO.newLinkY = (i * 16) - 1;
+					gO.isPortal = true;
+					gO.shiftsLeftRight = true;
+					if(!alreadyContainsPortal(-16, i * 16))
+					{
+						gameObjects.push(gO);
+					}
+				}
+			}
+			if(j == 15)
+			{
+				if(linkCanWalkSpaces.includes(levelMap[i][j]))
+				{
+					gO = new GameObject();
+					gO.x = 256;
+					gO.y = i * 16;
+					gO.width = 16;
+					gO.height = 16;
+					gO.newMap = currentMap + 1;
+					gO.newLinkX = 1;
+					gO.newLinkY = (i * 16) - 2;
+					gO.isPortal = true;
+					gO.shiftsLeftRight  = true;
+					if(!alreadyContainsPortal(256, i * 16))
+					{
+						gameObjects.push(gO);
+					}
 				}
 			}
 		}

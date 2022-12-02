@@ -1,7 +1,7 @@
 let maps = [];
 function MapBundle(m, o) {
   this.map = m;
-  this.gameObjects = o;
+  this.gameobjects = o;
 }
 
 function GameObject() {
@@ -13,6 +13,8 @@ function GameObject() {
   this.newLinkX = -1;
   this.newLinkY = -1;
   this.isPortal = false;
+  this.shiftsLeftRight = false;
+  this.shiftsUpDown = false;
   this.counter = 0;
   this.imageNum = 0;
   this.isText = false;
