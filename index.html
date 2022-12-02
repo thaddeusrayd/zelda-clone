@@ -83,7 +83,7 @@
                 this.nextY = 0;
                 this.isAttacking = false;
                 this.health = 0;
-                this.direction = "left";
+                this.direction = "up";
                 this.enemy = [];
                 this.counter = 0;
                 this.frame = 0;
@@ -342,11 +342,16 @@
 
             gO = new GameObject();
             gO.x = 160;
-            gO.y = 180;
+            gO.y = 184;
+            gO.nextX = 160;
+            gO.nextY = 184;
             gO.width = 16;
             gO.height = 16;
             gO.isEnemy = true;
             gO.enemyType = 1;
+            gO.isAttacking = false;
+            gO.health = 1;
+            gO.direction = "up";
             objects7_7.push(gO);
 
             let bundle = new MapBundle(map7_7, objects7_7);
@@ -810,8 +815,46 @@
                                     }
                                 } else {
                                     gameObjects[i].needsBounce = false;
+                                    if(gameObjects[i].health <= 0) {
+                                        let rupeeChance = Math.floor(Math.random()*10);
+                                        if(rupeeChance < 10) {
+                                            let rupeeObject = new GameObject();
+                                            rupeeObject.x = gameObjects[i].x + 4;
+                                            rupeeObject.y = gameObjects[i].y;
+                                            rupeeObject.width = 8;
+                                            rupeeObject.height = 16;
+                                            rupeeObject.isRupee = true;
+                                            let rupeeValueChance = Math.floor(Math.random()*10);
+                                            if(rupeeValueChance < 2) {
+                                                rupeeObject.rupeeValue = 5;
+                                            } else {
+                                                rupeeObject.rupeeValue = 1;
+                                            }
+                                            gameObjects.push(rupeeObject);
+                                        }
+                                        gameObjects.splice(i, 1);
+                                    }
                                 }
                             }
+                        }
+                    }
+                    if(gameObjects[i].isRupee) {
+                        if(gameObjects[i].rupeeValue == 1) {
+                            gameObjects[i].counter++;
+                            if(gameObjects[i].counter % 5 == 0) {
+                                gameObjects[i].rupeeImage += 1;
+                            }
+                            if (gameObjects[i].rupeeImage > 1) {
+                                gameObjects[i].rupeeImage == 0;
+                            }
+                            if (gameObjects[i].rupeeImage == 0) {
+                                ctx.drawImage(link, 244, 225, 8, 16, gameObjects[i].x, gameObjects[i].y, 8, 16);
+                            } else {
+                                ctx.drawImage(link, 244, 225, 8, 16, gameObjects[i].x, gameObjects[i].y, 8, 16);
+                            }
+                        } else {
+                            ctx.drawImage(link, 244, 225, 8, 16, gameObjects[i].x, gameObjects[i].y, 8, 16);
+
                         }
                     }
                 }   
