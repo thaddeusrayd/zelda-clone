@@ -946,7 +946,7 @@ function drawGameObjects()
 		}
 		if(gameObjects[i].isEnemy)
 		{
-			if(gameObjects[i].enemyType == 1)
+			if(gameObjects[i].enemyType == 1 || gameObjects[i].enemyType == 3)
 			{
 				gameObjects[i].counter++;
 				if(gameObjects[i].enemyPath == null || gameObjects[i].enemyPath.length == 0) {
@@ -1007,6 +1007,7 @@ function drawGameObjects()
 						gameObjects[i].frame = 0;
 					}
 				}
+				if(gameObjects[i].enemyType == 1) {
 				if(gameObjects[i].direction == "down")
 				{
 					if(gameObjects[i].frame == 0)
@@ -1059,7 +1060,62 @@ function drawGameObjects()
 						gameObjects[i].x, gameObjects[i].y, 16, 16);
 					}
 				}
+			} else {
 				
+					if(gameObjects[i].direction == "down")
+					{
+						if(gameObjects[i].frame == 0)
+						{
+							ctx.drawImage(enemies, 120, 0, 16, 16, 
+							gameObjects[i].x, gameObjects[i].y, 16, 16);
+						}
+						if(gameObjects[i].frame == 1)
+						{
+							ctx.drawImage(enemies, 120, 30, 16, 16, 
+							gameObjects[i].x, gameObjects[i].y, 16, 16);
+						}
+					}
+					else if(gameObjects[i].direction == "up")
+					{
+						if(gameObjects[i].frame == 0)
+						{
+							ctx.drawImage(enemies, 180, 0, 16, 16, 
+							gameObjects[i].x, gameObjects[i].y, 16, 16);
+						}
+						if(gameObjects[i].frame == 1)
+						{
+							ctx.drawImage(enemies, 180, 30, 16, 16, 
+							gameObjects[i].x, gameObjects[i].y, 16, 16);
+						}
+					}
+					else if(gameObjects[i].direction == "left")
+					{
+						if(gameObjects[i].frame == 0)
+						{
+							ctx.drawImage(enemies, 150, 0, 16, 16, 
+							gameObjects[i].x, gameObjects[i].y, 16, 16);
+						}
+						if(gameObjects[i].frame == 1)
+						{
+							ctx.drawImage(enemies, 150, 30, 16, 16, 
+							gameObjects[i].x, gameObjects[i].y, 16, 16);
+						}
+					}
+					else
+					{
+						if(gameObjects[i].frame == 0)
+						{
+							ctx.drawImage(enemies, 210, 0, 16, 16, 
+							gameObjects[i].x, gameObjects[i].y, 16, 16);
+						}
+						if(gameObjects[i].frame == 1)
+						{
+							ctx.drawImage(enemies, 210, 30, 16, 16, 
+							gameObjects[i].x, gameObjects[i].y, 16, 16);
+						}
+					
+				}
+			}
 				if(gameObjects[i].needsBounce)
 				{
 					if(gameObjects[i].x != gameObjects[i].bounceX)
