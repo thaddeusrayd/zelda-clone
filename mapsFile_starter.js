@@ -60,6 +60,10 @@ function GameObject() {
   this.isSwordProjectile = false;
   this.isAnimation = false;
   this.animationType = -1;
+  this.jumpHeight = 0;
+  this.fallAmount = 0;
+  this.reachedJumpHeight = false;
+  this.jumpDir = 0;
 }
 
 let gO = new GameObject();
@@ -3120,7 +3124,7 @@ gO.nextY = 10 * 16;
 gO.width = 16;
 gO.height = 16;
 gO.isEnemy = true;
-gO.enemyType = 3;
+gO.enemyType = 5;
 gO.isAttacking = false;
 gO.health = 1;
 gO.direction = "up";
