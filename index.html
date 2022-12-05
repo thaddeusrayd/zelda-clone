@@ -41,6 +41,7 @@ let lastButtonPressed = "up";
 let linkY = 135;
 let linkX = 116;
 let gameObjects = []; //an array of objects within a single map
+let projectiles = [];
 let gameMap = null;
 let lastPickUpItem = 0;
 let playPickUpItemAnimation = false;
@@ -54,6 +55,7 @@ let swordEquipped = 0;
 let hasSword = false;
 let isAttacking = false;
 let canAttackAgain = true;
+let canShootSword = true;
 
 let linkNeedsToBounce = false;
 let linkIsInvincible = false;
@@ -98,6 +100,7 @@ function keyDownHandler(e){
         isAttacking = true;
 		currentAnimation = 0;
 		canAttackAgain = false;
+		canShootSword = true;
 		playSound("./sounds/LOZ_sword_slash.wav")
     }
 }
@@ -238,6 +241,17 @@ function drawLink()
 						16, 27, linkX, linkY, 16, 27);
 						gameObjectCollision(linkX + 7, linkY + 16, gameObjects, 
 								false, true, "down");
+						if (currentLinkHearts == linkHearts && canShootSword) {
+							let proj = new GameObject();
+							proj.direction = lastButtonPressed;
+							proj.x = linkX + 5;
+							proj.y = linkY + 8;
+							proj.ySpeed = 2;
+							proj.isSwordProjectile = true;
+							playSound("./sounds/LOZ_sword_shoot.wav");
+							projectiles.push(proj);
+							canShootSword = false;
+						}
 					}
 					if(lastButtonPressed == "up")
 					{
@@ -245,6 +259,17 @@ function drawLink()
 						16, 26, linkX, linkY-14, 16, 26);
 						gameObjectCollision(linkX + 3, linkY-14, gameObjects, 
 								false, true, "up");
+						if (currentLinkHearts == linkHearts && canShootSword) {
+									let proj = new GameObject();
+									proj.direction = lastButtonPressed;
+									proj.x = linkX + 1;
+									proj.y = linkY - 6;
+									proj.ySpeed = -2;
+									proj.isSwordProjectile = true;
+									playSound("./sounds/LOZ_sword_shoot.wav");
+									projectiles.push(proj);
+									canShootSword = false;
+								}
 					}
 					if(lastButtonPressed == "left")
 					{
@@ -252,6 +277,17 @@ function drawLink()
 						26, 27, linkX - 10, linkY - 8, 27, 27);
 						gameObjectCollision(linkX - 8, linkY +5,  gameObjects, 
 								false, true, "left");
+								if (currentLinkHearts == linkHearts && canShootSword) {
+									let proj = new GameObject();
+									proj.direction = lastButtonPressed;
+									proj.x = linkX - 12;
+									proj.y = linkY + 4;
+									proj.ySpeed = -2;
+									proj.isSwordProjectile = true;
+									playSound("./sounds/LOZ_sword_shoot.wav");
+									projectiles.push(proj);
+									canShootSword = false;
+								}
 					}
 					if(lastButtonPressed == "right")
 					{
@@ -259,6 +295,17 @@ function drawLink()
 						30, 26, linkX, linkY - 8, 26, 26);
 						gameObjectCollision(linkX+ 14, linkY +5, gameObjects, 
 								false, true, "right");
+								if (currentLinkHearts == linkHearts && canShootSword) {
+									let proj = new GameObject();
+									proj.direction = lastButtonPressed;
+									proj.x = linkX;
+									proj.y = linkY + 3;
+									proj.ySpeed = 2;
+									proj.isSwordProjectile = true;
+									playSound("./sounds/LOZ_sword_shoot.wav");
+									projectiles.push(proj);
+									canShootSword = false;
+								}
 					};
 				}
 				if(animationCounter >= 6)
@@ -1183,6 +1230,41 @@ function drawGameObjects()
 				gameObjects.splice(i,1);
 			} 
 		}
+		if(gameObjects[i].isAnimation) {
+			gameObjects[i].counter++;
+			if(gameObjects[i].counter >= 1) {
+				gameObjects[i].frame++;
+				gameObjects[i].counter = 0;
+			}
+			if(gameObjects[i].animationType == 0) {
+				if(gameObjects[i].frame == 0 || gameObjects[i].frame == 1) {
+					ctx.drawImage(link1, 119, 282, 8, 8, gameObjects[i].x - 8 - gameObjects[i].frame, gameObjects[i].y - 8 - gameObjects[i].frame, 8, 8);
+					ctx.drawImage(link1, 128, 282, 8, 8, gameObjects[i].x + 8 + gameObjects[i].frame, gameObjects[i].y - 8 - gameObjects[i].frame, 8, 8);
+					ctx.drawImage(link1, 119, 293, 8, 8, gameObjects[i].x - 8 - gameObjects[i].frame, gameObjects[i].y + 8 + gameObjects[i].frame, 8, 8);
+					ctx.drawImage(link1, 119, 293, 8, 8, gameObjects[i].x + 8 + gameObjects[i].frame, gameObjects[i].y + 8 + gameObjects[i].frame, 8, 8);
+				}
+				else if(gameObjects[i].frame == 2 || gameObjects[i].frame == 3) {
+					ctx.drawImage(link1, 149, 282, 8, 8, gameObjects[i].x - 8 - gameObjects[i].frame, gameObjects[i].y - 8 - gameObjects[i].frame, 8, 8);
+					ctx.drawImage(link1, 158, 282, 8, 8, gameObjects[i].x + 8 + gameObjects[i].frame, gameObjects[i].y - 8 - gameObjects[i].frame, 8, 8);
+					ctx.drawImage(link1, 149, 293, 8, 8, gameObjects[i].x - 8 - gameObjects[i].frame, gameObjects[i].y + 8 + gameObjects[i].frame, 8, 8);
+					ctx.drawImage(link1, 159, 293, 8, 8, gameObjects[i].x + 8 + gameObjects[i].frame, gameObjects[i].y + 8 + gameObjects[i].frame, 8, 8);
+				}
+				else if(gameObjects[i].frame == 4 || gameObjects[i].frame == 5) {
+					ctx.drawImage(link1, 119, 282, 8, 8, gameObjects[i].x - 8 - gameObjects[i].frame, gameObjects[i].y - 8 - gameObjects[i].frame, 8, 8);
+					ctx.drawImage(link1, 128, 282, 8, 8, gameObjects[i].x + 8 + gameObjects[i].frame, gameObjects[i].y - 8 - gameObjects[i].frame, 8, 8);
+					ctx.drawImage(link1, 119, 293, 8, 8, gameObjects[i].x - 8 - gameObjects[i].frame, gameObjects[i].y + 8 + gameObjects[i].frame, 8, 8);
+					ctx.drawImage(link1, 119, 293, 8, 8, gameObjects[i].x + 8 + gameObjects[i].frame, gameObjects[i].y + 8 + gameObjects[i].frame, 8, 8);
+				}
+				else if(gameObjects[i].frame == 6 || gameObjects[i].frame == 7) {
+					ctx.drawImage(link1, 149, 282, 8, 8, gameObjects[i].x - 8 - gameObjects[i].frame, gameObjects[i].y - 8 - gameObjects[i].frame, 8, 8);
+					ctx.drawImage(link1, 158, 282, 8, 8, gameObjects[i].x + 8 + gameObjects[i].frame, gameObjects[i].y - 8 - gameObjects[i].frame, 8, 8);
+					ctx.drawImage(link1, 149, 293, 8, 8, gameObjects[i].x - 8 - gameObjects[i].frame, gameObjects[i].y + 8 + gameObjects[i].frame, 8, 8);
+					ctx.drawImage(link1, 159, 293, 8, 8, gameObjects[i].x + 8 + gameObjects[i].frame, gameObjects[i].y + 8 + gameObjects[i].frame, 8, 8);
+				} else {
+					gameObjects.splice(i, 1);
+				}
+			}
+		}
 	}
 }
 
@@ -1467,7 +1549,7 @@ function addMapGameObjects(levelMap, objectArray)
 					gO.height = 16;
 					gO.newMap = currentMap + 16;
 					gO.newLinkX = (j * 16) + 1;
-					gO.newLinkY = 81;
+					gO.newLinkY = 65;
 					gO.isPortal = true;
 					gO.shiftsUpDown = true;
 					if(!alreadyContainsPortal(j * 16, (i + 1) * 16))
@@ -1486,7 +1568,7 @@ function addMapGameObjects(levelMap, objectArray)
 					gO.width = 16;
 					gO.height = 16;
 					gO.newMap = currentMap - 1;
-					gO.newLinkX = 223 + 16;
+					gO.newLinkX = 239;
 					gO.newLinkY = (i * 16) - 1;
 					gO.isPortal = true;
 					gO.shiftsLeftRight = true;
@@ -1520,6 +1602,85 @@ function addMapGameObjects(levelMap, objectArray)
 	}
 }
 
+function drawProjectiles() {
+	for ( let i = 0 ; i<projectiles.length; i++){
+		if(projectiles[i].isSwordProjectile) {
+			projectiles[i].counter++;
+			if(projectiles[i].counter > 2){
+				projectiles[i].frame++;
+				projectiles[i].counter = 0;
+				if(projectiles[i].frame > 1) {
+					projectiles[i].frame = 0;
+				}
+			}
+			if(projectiles[i].direction == "up") {
+				projectiles[i].y -= 2;
+				if(projectiles[i].frame == 0) {
+					ctx.drawImage(link1, 64, 195, 8, 16, Math.floor(projectiles[i].x), Math.floor(projectiles[i].y), 8, 16);
+				}
+				if(projectiles[i].frame == 1) {
+					ctx.drawImage(link1, 64, 255, 8, 16, Math.floor(projectiles[i].x), Math.floor(projectiles[i].y), 8, 16);
+				}
+			}
+			if(projectiles[i].direction == "down") {
+				projectiles[i].y += 2;
+				if(projectiles[i].frame == 0) {
+					ctx.drawImage(link1, 4, 195, 8, 16, Math.floor(projectiles[i].x), Math.floor(projectiles[i].y), 8, 16);
+				}
+				if(projectiles[i].frame == 1) {
+					ctx.drawImage(link1, 4, 255, 8, 16, Math.floor(projectiles[i].x), Math.floor(projectiles[i].y), 8, 16);
+				}
+			}
+			if(projectiles[i].direction == "left") {
+				projectiles[i].x -= 2;
+				if(projectiles[i].frame == 0) {
+					ctx.drawImage(link1, 30, 199, 16, 8, Math.floor(projectiles[i].x), Math.floor(projectiles[i].y), 16, 8);
+				}
+				if(projectiles[i].frame == 1) {
+					ctx.drawImage(link1, 30, 259, 16, 8, Math.floor(projectiles[i].x), Math.floor(projectiles[i].y), 16, 8);
+				}
+			}
+			if(projectiles[i].direction == "right") {
+				projectiles[i].x += 2;
+				if(projectiles[i].frame == 0) {
+					ctx.drawImage(link1, 90, 199, 16, 8, Math.floor(projectiles[i].x), Math.floor(projectiles[i].y), 16, 8);
+				}
+				if(projectiles[i].frame == 1) {
+					ctx.drawImage(link1, 90, 259, 16, 8, Math.floor(projectiles[i].x), Math.floor(projectiles[i].y), 16, 8);
+				}
+			}
+			for (let j = 0; j<gameObjects.length; j++){
+				if(projectiles[i].x <= gameObjects[j].x + gameObjects[j].width &&
+				projectiles[i].x + projectiles[i].width >= gameObjects[j].x &&
+				projectiles[i].y <= gameObjects[j].y + gameObjects[j].height &&
+				projectiles[i].y + projectiles[i].height >= gameObjects[j].y){
+					if(gameObjects[j].isEnemy) {
+						gameObjects[j].health -= 1;
+						gameObjects[j].needsBounce = true;
+						getBounceLoc(gameObjects[j], false, projectiles[i].direction);
+						gO = new GameObject();
+						gO.isAnimation = true;
+						gO.counter = -1;
+						gO.animationType = 0;
+						gO.x = projectiles[i].x;
+						gO.y = projectiles[i].y;
+						gameObjects.push(gO);
+						if(gameObjects[j].health == 0) {
+							playSound("./sounds/LOZ_enemy_die.wav");
+							gameObjects.splice(j, 1);
+						}
+						else {
+							playSound("./sounds/LOZ_enemy_hit.wav");
+						}
+						projectiles.splice(i, 1);
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
 function draw () {
    setTimeout(function() {
    requestAnimationFrame(draw);
@@ -1534,6 +1695,7 @@ function draw () {
    drawLink();
    gameObjectCollision(linkX, linkY, gameObjects, true);
    drawGameObjects();
+   drawProjectiles();
    drawHUD();
    },1000/fps);
 }
