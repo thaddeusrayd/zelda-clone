@@ -121,7 +121,9 @@ function keyDownHandler(e){
 		///added for lesson 19
 		canShootSword = true;
 		playSound("./sounds/LOZ_sword_slash.wav")
-    }
+    } else if (e.keyCode == 32 && needInventoryScreen) {
+		isAttacking = true;
+	}
 	if(e.keyCode == 13 && !hasGameStarted) {
 		hasGameStarted = true;
 		backgroundMusic.play();
@@ -1831,8 +1833,8 @@ function drawHUD(offset)
 				0, 0 + offset, 256, 56);
 	ctx.drawImage(hud, 2, 112, 16, 64, 
 				176, 32 + offset, 64,  16);
-	ctx.fillStyle = "black";
-	ctx.fillRect(176, 32, 64, 16);
+	//ctx.fillStyle = "black";
+	//ctx.fillRect(176, 32, 64, 16);
 	//draw Hearts
 	let fullHearts = Math.floor(currentLinkHearts)
 	let halfHearts = currentLinkHearts - fullHearts;
@@ -2162,7 +2164,7 @@ function drawGameStart() {
 function drawInventoryScreen(offset) {
 	ctx.drawImage(hud, 1, 11, 256, 88, 0, -200 + offset, 256, 88);
 	ctx.drawImage(hud, 1, 112, 256, 88, 0, -112 + offset, 256, 88);
-	ctx.drawImage(hud, 519, 42, 96, 48, 80, -112 + offset, 96, 48);
+	ctx.drawImage(hud, 519, 42, 96, 48, 80, -112 + offset + 16, 96, 48);
 	if(leftPressed && cursorX > 132) {
 		leftPressed = false;
 		cursorX -= 22;
@@ -2253,6 +2255,99 @@ function drawInventoryScreen(offset) {
 	{
 		ctx.drawImage(hud, 590, 156, 8, 16, 
 							212, 26 + offset - 200, 8, 16);
+	}
+	if(cursorX == 153 && cursorY == -152)
+	{
+		if(isAttacking)
+		{
+			currentEquippedItem = 1;
+			isAttacking = false;
+		}
+	}
+	if(cursorX == 175 && cursorY == -152)
+	{
+		if(isAttacking)
+		{
+			currentEquippedItem = 2;
+			isAttacking = false;
+		}
+	}
+	if(cursorX == 197 && cursorY == -152)
+	{
+		if(isAttacking)
+		{
+			currentEquippedItem = 3;
+			isAttacking = false;
+		}
+	}
+	if(cursorX == 131 && cursorY == -134)
+	{
+		if(isAttacking)
+		{
+			currentEquippedItem = 4;
+			isAttacking = false;
+		}
+	}
+	if(cursorX == 153 && cursorY == -134)
+	{
+		if(isAttacking)
+		{
+			currentEquippedItem = 5;
+			isAttacking = false;
+		}
+	}
+	if(cursorX == 175 && cursorY == -134)
+	{
+		if(isAttacking)
+		{
+			currentEquippedItem = 6;
+			isAttacking = false;
+		}
+	}
+	if(cursorX == 197 && cursorY == -134)
+	{
+		if(isAttacking)
+		{
+			currentEquippedItem = 7;
+			isAttacking = false;
+		}
+	}
+	switch(currentEquippedItem)
+	{
+		case 0:
+			ctx.drawImage(hud, 584, 137, 8, 16, 
+				69, 48 + offset - 200, 8, 16);
+			break;
+		case 1:
+			ctx.drawImage(hud, 604, 137, 8, 16, 
+				69, 48 + offset - 200, 8, 16);
+			break;
+		case 2:
+			ctx.drawImage(hud, 615, 137, 8, 16, 
+				65, 48 + offset - 200, 8, 16);
+			ctx.drawImage(hud, 633, 137, 8, 16, 
+				73, 48 + offset - 200, 8, 16);
+			break;
+		case 3:
+			ctx.drawImage(hud, 653, 137, 8, 16, 
+				69, 48 + offset - 200, 8, 16);
+			break;
+		case 4:
+			ctx.drawImage(hud, 664, 137, 8, 16, 
+				69, 48 + offset - 200, 8, 16);
+			break;
+		case 5:
+			ctx.drawImage(hud, 675, 137, 8, 16, 
+				69, 48 + offset - 200, 8, 16);
+			break;	
+		case 6:
+			ctx.drawImage(hud, 704, 137, 8, 16, 
+				69, 48 + offset - 200, 8, 16);
+			break;
+		case 7:
+			ctx.drawImage(hud, 715, 137, 8, 16, 
+				69, 48 + offset - 200, 8, 16);
+			break;
 	}
 }
 
