@@ -43,6 +43,9 @@ let linkX = 116;
 let gameObjects = []; //an array of objects within a single map
 ///added for Lesson 19
 let projectiles = [];
+let bombs = [];
+let attackCounter = 0;
+let bPressed = false;
 let gameMap = null;
 let lastPickUpItem = 0;
 let playPickUpItemAnimation = false;
@@ -93,6 +96,10 @@ function playSound(source)
 
 
 function keyDownHandler(e){
+    if(e.keyCode == 66)
+    {
+	   bPressed = true;
+	}
     if(e.keyCode == 37)
     {
 	   leftPressed = true;
@@ -240,6 +247,36 @@ function drawLink()
 		}
 	}
 	else{
+		if(bPressed && currentEquippedItem == 1) {
+			animationCounter++;
+			let adjustedX = linkX;
+			let adjustedY = linkY;
+			if(lastButtonPressed == "down"){
+				ctx.drawImage(link1, 0, 60, 16, 16, linkX, linkY, 16, 16);
+				adjustedY += 16;
+			}
+			else if(lastButtonPressed == "up"){
+				ctx.drawImage(link1, 62, 60, 16, 16, linkX, linkY, 16, 16);
+				adjustedY -= 8;
+			}
+			else if(lastButtonPressed == "left"){
+				ctx.drawImage(link1, 30, 60, 16, 16, linkX, linkY, 16, 16);
+				adjustedX -= 8;
+			}
+			else if(lastButtonPressed == "right"){
+				ctx.drawImage(link1, 91, 60, 16, 16, linkX, linkY, 16, 16);
+				adjustedX += 16;
+			}
+			if(animationCounter > 10){
+				bPressed = false;
+				animationCounter = 0;
+				gO = new GameObject();
+				gO.x = adjustedX;
+				gO.y = adjustedY;
+				gO.isBomb = true;
+				playSound('./sounds/LOZ_Bomb_Drop.wav)');
+			}
+		}
 		if(isAttacking && hasSword)
 		{
 			if(currentAnimation == 0)
@@ -510,7 +547,7 @@ function collision(x, y, map)
 	return false;	
 }
 
-function gameObjectCollision(x, y, objects, isLink, isSword, direction)
+function gameObjectCollision(x, y, objects, isLink, isSword, isBomb, isCandle, isArrow, direction)
 {
 	if(isLink)
 	{
@@ -704,6 +741,75 @@ function gameObjectCollision(x, y, objects, isLink, isSword, direction)
 					}
 			}
 	}
+	else if (isBomb) {
+		for (let i = 0; i <objects.length; i++) {
+			if (x -8 <= objects[i].x + objects[i].width &&
+				x + 24 >= objects[i].x &&
+				y -8 <= objects[i].y + objects[i].height &&
+				y + 24 >= objects[i].y ) 
+				{
+					if(objects[i].isEnemy) {
+						objects[i].health -= 1;
+						objects[i].needsBounce = true;
+						getBounceLoc(objects[i], false, direction);
+						if(objects[i].health <= 0) {
+							playSound('./sounds/LOZ_enemy_die.wav');
+							let count = 0;
+							let j = 0;
+							for (j = 0; j < objects.length; j++) {
+								if(objects[i].isEnemy) {
+									count++;
+								}
+							}
+							if (count == 1) {
+								if(objects[i].groupItemNumber == 1) {
+									gO = new GameObject();
+									gO.x = objects[i].groupItemX;
+									gO.y = objects[i].groupItemY;
+									gO.width = 8;
+									gO.height = 16;
+									go.isKeyPickup = true;
+									playSound("./sounds/LOZ_key_appear.wav");
+									gameObjects.push(gO);
+								}
+								if(objects[i].groupItemNumber == 1) {
+									gO = new GameObject();
+									gO.x = objects[i].groupItemX;
+									gO.y = objects[i].groupItemY;
+									gO.width = 8;
+									gO.height = 16;
+									gO.isPickUpItem = true;
+									gO.pickUpItemNum = 17;
+									playSound("./sounds/LOZ_key_appear.wav");
+									gameObjects.push(gO);
+								}
+							}
+							if(objects[i].openClosedDoor) {
+
+							}
+							objects.splice(i,1);
+						} else {
+							playSound('./sounds/LOZ_enemy_hit.wav');
+						}
+					} else if(objects[i].isBombable && objects[i].isDoor) {
+
+					} else if(objects[i].isBombable) {
+						let gO2 = new GameObject();
+						gO2.x = objects[i].x;
+						gO2.y = objects[i].y;
+						gO2.width = 16;
+						gO2.height = 8;
+						gO2.newMap = objects[i].newMap;
+						gO2.newLinkX = 120;
+						gO2.newLinkY = 220;
+						gO2.isStairs = true;
+						gO2.isPortal = true;
+						gameObjects.push(gO2);
+						playSound('/sounds/LOZ_secret.wav');
+					}
+			}
+		}
+	}
 	else
 	{
 		let swordW = 11;
@@ -883,6 +989,10 @@ function drawGameObjects()
 {
 	for(let i = 0; i < gameObjects.length; i++)
 	{
+		if(gameObjects[i].isSaleRupee) {
+			ctx.drawImage(link1, 274, 225, 8, 16, gameObjects[i].x, gameObjects[i].y, 8, 16);
+			
+		}
 		if(gameObjects[i].isPickUpItem)
 		{
 			
