@@ -27,7 +27,9 @@ let link1 = new Image();
 link1.src = "link.png";
 let hud = new Image();
 hud.src = "pausescreen.png";
-///added 
+let link2 = new Image();
+link2.src = "link2.png";
+
 let enemies = new Image();
 enemies.src = "enemies.png";
 let rightPressed = false;
@@ -41,7 +43,6 @@ let lastButtonPressed = "up";
 let linkY = 135;
 let linkX = 116;
 let gameObjects = []; //an array of objects within a single map
-///added for Lesson 19
 let projectiles = [];
 let bombs = [];
 let attackCounter = 0;
@@ -58,20 +59,20 @@ let swordEquipped = 0;
 let hasSword = false;
 let isAttacking = false;
 let canAttackAgain = true;
-///added for lesson 19
 let canShootSword = true;
 
 let linkNeedsToBounce = false;
 let linkIsInvincible = false;
 let invincibleTime = 0;
 
+//added for lesson 22
 let hasGameStarted = false;
 let needInventoryScreen = false;
 let inventoryOffset = 0;
-let currentEquippedItem = -1;
+let currentEquippedItem = -1
 let returnToGame = false;
 let inventoryItems = [null, null, null, null, null, null, null, null, null, null, null, null, null];
-let bombNums = 0;
+let bombNum = 0;
 let keyNum = 0;
 let triforceNum = 0;
 let cursorX = 131;
@@ -81,9 +82,9 @@ backgroundMusic.src = "./sounds/overworld_edit.mp3";
 backgroundMusic.loop = true;
 
 
-gameObjects = maps[119].gameobjects;
-gameMap = maps[119].map;
-let currentMap = 119;
+gameObjects = maps[1].gameobjects;
+gameMap = maps[1].map;
+let currentMap = 1;
 addMapGameObjects(gameMap, gameObjects);
 
 
@@ -96,7 +97,7 @@ function playSound(source)
 
 
 function keyDownHandler(e){
-    if(e.keyCode == 66)
+	if(e.keyCode == 66)
     {
 	   bPressed = true;
 	}
@@ -120,23 +121,24 @@ function keyDownHandler(e){
 	   downPressed = true;
 	   lastButtonPressed = "down";
 	}
-	if(e.keyCode == 32 && canAttackAgain && hasSword)
+	if(e.keyCode == 32 && canAttackAgain)
 	{
         isAttacking = true;
 		currentAnimation = 0;
 		canAttackAgain = false;
-		///added for lesson 19
 		canShootSword = true;
 		playSound("./sounds/LOZ_sword_slash.wav")
-    } else if (e.keyCode == 32 && needInventoryScreen) {
-		isAttacking = true;
-	}
-	if(e.keyCode == 13 && !hasGameStarted) {
+    }
+	//added for 22
+	if(e.keyCode == 13 && !hasGameStarted)
+	{
 		hasGameStarted = true;
 		backgroundMusic.play();
 	}
-	if(e.keyCode == 13 && hasGameStarted) {
-		if(!needInventoryScreen) {
+	if(e.keyCode == 13 && hasGameStarted)
+	{
+		if(!needInventoryScreen)
+		{
 			needInventoryScreen = true;
 		}
 		returnToGame = !returnToGame;
@@ -247,34 +249,41 @@ function drawLink()
 		}
 	}
 	else{
-		if(bPressed && currentEquippedItem == 1) {
+		if(bPressed && currentEquippedItem == 1)
+		{
 			animationCounter++;
 			let adjustedX = linkX;
 			let adjustedY = linkY;
-			if(lastButtonPressed == "down"){
+			if(lastButtonPressed == "down")
+			{
 				ctx.drawImage(link1, 0, 60, 16, 16, linkX, linkY, 16, 16);
 				adjustedY += 16;
 			}
-			else if(lastButtonPressed == "up"){
+			else if(lastButtonPressed == "up")
+			{
 				ctx.drawImage(link1, 62, 60, 16, 16, linkX, linkY, 16, 16);
 				adjustedY -= 8;
 			}
-			else if(lastButtonPressed == "left"){
+			else if(lastButtonPressed == "left")
+			{
 				ctx.drawImage(link1, 30, 60, 16, 16, linkX, linkY, 16, 16);
 				adjustedX -= 8;
 			}
-			else if(lastButtonPressed == "right"){
+			else if(lastButtonPressed == "down")
+			{
 				ctx.drawImage(link1, 91, 60, 16, 16, linkX, linkY, 16, 16);
 				adjustedX += 16;
 			}
-			if(animationCounter > 10){
+			if(animationCounter > 10)
+			{
 				bPressed = false;
 				animationCounter = 0;
 				gO = new GameObject();
 				gO.x = adjustedX;
 				gO.y = adjustedY;
 				gO.isBomb = true;
-				playSound('./sounds/LOZ_Bomb_Drop.wav)');
+				bombs.push(gO);
+				playSound("./sounds/LOZ_Bomb_Drop.wav");
 			}
 		}
 		if(isAttacking && hasSword)
@@ -310,7 +319,6 @@ function drawLink()
 						16, 27, linkX, linkY, 16, 27);
 						gameObjectCollision(linkX + 7, linkY + 16, gameObjects, 
 								false, true, "down");
-						//added for lesson 19
 						if(currentLinkHearts == linkHearts && 
 						canShootSword)
 						{
@@ -331,7 +339,6 @@ function drawLink()
 						16, 26, linkX, linkY-14, 16, 26);
 						gameObjectCollision(linkX + 3, linkY-14, gameObjects, 
 								false, true, "up");
-						//added for lesson 19
 						if(currentLinkHearts == linkHearts && 
 						canShootSword)
 						{
@@ -352,7 +359,6 @@ function drawLink()
 						26, 27, linkX - 10, linkY - 8, 27, 27);
 						gameObjectCollision(linkX - 8, linkY +5,  gameObjects, 
 								false, true, "left");
-						//added for lesson 19
 						if(currentLinkHearts == linkHearts && 
 						canShootSword)
 						{
@@ -373,7 +379,6 @@ function drawLink()
 						30, 26, linkX, linkY - 8, 26, 26);
 						gameObjectCollision(linkX+ 14, linkY +5, gameObjects, 
 								false, true, "right");
-						//added for lesson 19
 						if(currentLinkHearts == linkHearts && 
 						canShootSword)
 						{
@@ -741,74 +746,89 @@ function gameObjectCollision(x, y, objects, isLink, isSword, isBomb, isCandle, i
 					}
 			}
 	}
-	else if (isBomb) {
-		for (let i = 0; i <objects.length; i++) {
-			if (x -8 <= objects[i].x + objects[i].width &&
-				x + 24 >= objects[i].x &&
-				y -8 <= objects[i].y + objects[i].height &&
-				y + 24 >= objects[i].y ) 
-				{
-					if(objects[i].isEnemy) {
-						objects[i].health -= 1;
-						objects[i].needsBounce = true;
-						getBounceLoc(objects[i], false, direction);
-						if(objects[i].health <= 0) {
-							playSound('./sounds/LOZ_enemy_die.wav');
-							let count = 0;
-							let j = 0;
-							for (j = 0; j < objects.length; j++) {
-								if(objects[i].isEnemy) {
-									count++;
+	else if(isBomb)
+	{
+		for(let i = 0; i < objects.length; i++)
+			{
+				if (x - 8  <= objects[i].x + objects[i].width &&
+					x + 24>= objects[i].x &&
+					y - 8 <= objects[i].y + objects[i].height &&
+					y + 24 >= objects[i].y ) 
+					{
+						if(objects[i].isEnemy)
+						{
+							objects[i].health -= 1;
+							objects[i].needsBounce = true;
+							getBounceLoc(objects[i], false, direction);
+							if(objects[i].health <= 0)
+							{
+								playSound("./sounds/LOZ_enemy_die.wav");
+								let count = 0;
+								for(let j = 0; j < objects.length; j++)
+								{
+									if(objects[i].isEnemy)
+									{
+										count++;
+									}
 								}
-							}
-							if (count == 1) {
-								if(objects[i].groupItemNumber == 1) {
-									gO = new GameObject();
-									gO.x = objects[i].groupItemX;
-									gO.y = objects[i].groupItemY;
-									gO.width = 8;
-									gO.height = 16;
-									go.isKeyPickup = true;
-									playSound("./sounds/LOZ_key_appear.wav");
-									gameObjects.push(gO);
+								if(count == 1)
+								{
+									if(objects[i].groupItemNumber == 1)
+									{
+										gO = new GameObject();
+										gO.x = objects[i].groupItemX;
+										gO.y = objects[i].groupItemY;
+										gO.width = 8;
+										gO.height = 16;
+										gO.isKeyPickup = true;
+										playSound("./sounds/LOZ_key_appear.wav");
+										gameObjects.push(gO);
+									}
+									if(objects[i].groupItemNumber == 2)
+									{
+										gO = new GameObject();
+										gO.x = objects[i].groupItemX;
+										gO.y = objects[i].groupItemY;
+										gO.width = 8;
+										gO.height = 16;
+										gO.isPickUpItem = true;
+										gO.pickUpItemNum = 17;
+										playSound("./sounds/LOZ_key_appear.wav");
+										gameObjects.push(gO);
+									}
 								}
-								if(objects[i].groupItemNumber == 1) {
-									gO = new GameObject();
-									gO.x = objects[i].groupItemX;
-									gO.y = objects[i].groupItemY;
-									gO.width = 8;
-									gO.height = 16;
-									gO.isPickUpItem = true;
-									gO.pickUpItemNum = 17;
-									playSound("./sounds/LOZ_key_appear.wav");
-									gameObjects.push(gO);
+								if(objects[i].openClosedDoor)
+								{
+									
 								}
+								objects.splice(i, 1);
 							}
-							if(objects[i].openClosedDoor) {
-
+							else
+							{
+								playSound("./sounds/LOZ_enemy_hit.wav");
 							}
-							objects.splice(i,1);
-						} else {
-							playSound('./sounds/LOZ_enemy_hit.wav');
 						}
-					} else if(objects[i].isBombable && objects[i].isDoor) {
-
-					} else if(objects[i].isBombable) {
-						let gO2 = new GameObject();
-						gO2.x = objects[i].x;
-						gO2.y = objects[i].y;
-						gO2.width = 16;
-						gO2.height = 8;
-						gO2.newMap = objects[i].newMap;
-						gO2.newLinkX = 120;
-						gO2.newLinkY = 220;
-						gO2.isStairs = true;
-						gO2.isPortal = true;
-						gameObjects.push(gO2);
-						playSound('/sounds/LOZ_secret.wav');
+						else if(objects[i].isBombable && objects[i].isDoor)
+						{
+						
+						}
+						else if(objects[i].isBombable)
+						{
+							let gO2 = new GameObject();
+							gO2.x = objects[i].x;
+							gO2.y = objects[i].y;
+							gO2.width = 16;
+							gO2.height = 8;
+							gO2.newMap = objects[i].newMap;
+							gO2.newLinkX = 120;
+							gO2.newLinkY = 220;
+							gO2.isStairs = true;
+							gO2.isPortal = true;
+							gameObjects.push(gO2);
+							playSound("./sounds/LOZ_secret.wav");
+						}
 					}
 			}
-		}
 	}
 	else
 	{
@@ -989,8 +1009,9 @@ function drawGameObjects()
 {
 	for(let i = 0; i < gameObjects.length; i++)
 	{
-		if(gameObjects[i].isSaleRupee) {
-			ctx.drawImage(link1, 274, 225, 8, 16, gameObjects[i].x, gameObjects[i].y, 8, 16);
+		if(gameObjects[i].isSaleRupee)
+		{
+			ctx.drawImage(link1, 274,225,8, 16, gameObjects[i].x, gameObjects[i].y, 8, 16);
 			
 		}
 		if(gameObjects[i].isPickUpItem)
@@ -1117,6 +1138,42 @@ function drawGameObjects()
 		{
 			ctx.drawImage(chars1, 35, 11, 16, 16, 
 						gameObjects[i].x, gameObjects[i].y, 16, 16);
+		}
+		if(gameObjects[i].isMoblin)
+		{
+			ctx.drawImage(enemies, 0, 120, 16, 16, 
+						gameObjects[i].x, gameObjects[i].y, 16, 16);
+		}
+		if(gameObjects[i].isStairs)
+		{
+			if(gameObjects[i].stairType == 0)
+			{
+				ctx.drawImage(worldTiles, 103, 1, 16, 16, 
+						gameObjects[i].x, gameObjects[i].y, 16, 16);
+			}
+			else if(gameObjects[i].stairType == 1)
+			{
+				ctx.drawImage(worldTiles, 120, 18, 16, 16, 
+						gameObjects[i].x, gameObjects[i].y, 16, 16);
+			}
+			else if(gameObjects[i].stairType == 2)
+			{
+				ctx.drawImage(worldTiles, 205, 18, 16, 16, 
+						gameObjects[i].x, gameObjects[i].y, 16, 16);
+			}
+		}
+		if(gameObjects[i].isBombable)
+		{
+			if(gameObjects[i].bushType == 0)
+			{
+				ctx.drawImage(worldTiles, 18, 52, 16, 16, 
+						gameObjects[i].x, gameObjects[i].y, 16, 16);
+			}
+			if(gameObjects[i].bushType == 1)
+			{
+				ctx.drawImage(worldTiles, 120, 52, 16, 16, 
+						gameObjects[i].x, gameObjects[i].y, 16, 16);
+			}
 		}
 		if(gameObjects[i].isEnemy)
 		{
@@ -1936,11 +1993,78 @@ function aStar(start, end, maze)
 	}
 }
 
+function drawBombs()
+{
+	for(let i = 0; i < bombs.length; i++)
+	{
+		bombs[i].counter++;
+		if(!bombs[i].hasExploded)
+		{
+			if(bombs[i].counter > 20)
+			{
+				bombs[i].counter = 0;
+				bombs[i].hasExploded = true;
+			}
+		}
+		else if(bombs[i].counter > 0)
+		{
+			bombs[i].frame++;
+			bombs[i].counter = 0;
+		}
+		if(bombs[i].frame == 0)
+		{
+			ctx.drawImage(link2, 129, 185, 8, 16, bombs[i].x, bombs[i].y,8, 16);
+		}	
+		else if(bombs[i].frame == 1)
+		{
+			playSound("./sounds/LOZ_bomb_blow.wav");
+			ctx.drawImage(link2, 138, 185, 16, 16, bombs[i].x - 16, bombs[i].y,16, 16);
+			ctx.drawImage(link2, 138, 185, 16, 16, bombs[i].x + 8, bombs[i].y - 16, 16, 16);
+			ctx.drawImage(link2, 138, 185, 16, 16, bombs[i].x, bombs[i].y, 16, 16);
+			ctx.drawImage(link2, 138, 185, 16, 16, bombs[i].x - 8, bombs[i].y + 16, 16, 16);
+		}
+		else if(bombs[i].frame < 9 && bombs[i].frame%2 == 0)
+		{
+			ctx.drawImage(link2, 138, 185, 16, 16, bombs[i].x + 16, bombs[i].y,16, 16);
+			ctx.drawImage(link2, 138, 185, 16, 16, bombs[i].x - 8, bombs[i].y + 16, 16, 16);
+			ctx.drawImage(link2, 138, 185, 16, 16, bombs[i].x, bombs[i].y, 16, 16);
+			ctx.drawImage(link2, 138, 185, 16, 16, bombs[i].x + 8, bombs[i].y - 16, 16, 16);
+		}
+		else if(bombs[i].frame < 9 && bombs[i].frame%2 == 1)
+		{
+			ctx.drawImage(link2, 138, 185, 16, 16, bombs[i].x - 16, bombs[i].y,16, 16);
+			ctx.drawImage(link2, 138, 185, 16, 16, bombs[i].x + 8, bombs[i].y - 16, 16, 16);
+			ctx.drawImage(link2, 138, 185, 16, 16, bombs[i].x, bombs[i].y, 16, 16);
+			ctx.drawImage(link2, 138, 185, 16, 16, bombs[i].x - 8, bombs[i].y + 16, 16, 16);
+		}
+		else if(bombs[i].frame%2 == 0)
+		{
+			ctx.drawImage(link2, 155, 185, 16, 16, bombs[i].x + 16, bombs[i].y,16, 16);
+			ctx.drawImage(link2, 155, 185, 16, 16, bombs[i].x - 8, bombs[i].y + 16, 16, 16);
+			ctx.drawImage(link2, 155, 185, 16, 16, bombs[i].x, bombs[i].y, 16, 16);
+			ctx.drawImage(link2, 155, 185, 16, 16, bombs[i].x + 8, bombs[i].y - 16, 16, 16);
+		}
+		else if(bombs[i].frame%2 == 1)
+		{
+			ctx.drawImage(link2, 155, 185, 16, 16, bombs[i].x + 16, bombs[i].y,16, 16);
+			ctx.drawImage(link2, 155, 185, 16, 16, bombs[i].x - 8, bombs[i].y + 16, 16, 16);
+			ctx.drawImage(link2, 155, 185, 16, 16, bombs[i].x, bombs[i].y, 16, 16);
+			ctx.drawImage(link2, 155, 185, 16, 16, bombs[i].x + 8, bombs[i].y - 16, 16, 16);
+		}
+		if(bombs[i].frame == 16)
+		{
+			gameObjectCollision(bombs[i].x, bombs[i].y, gameObjects, false, false, true, false, false, "up");
+			bombs.splice(i, 1);
+		}
+	}
+}
 
+//added for 22
 function drawHUD(offset)
 {
 	ctx.drawImage(hud, 258, 11, 256, 56, 
 				0, 0 + offset, 256, 56);
+	//added for 22
 	ctx.drawImage(hud, 2, 112, 16, 64, 
 				176, 32 + offset, 64,  16);
 	//ctx.fillStyle = "black";
@@ -2012,11 +2136,8 @@ function drawHUD(offset)
 	
 	////This draws the rupee values
 	///cover with black
-	//ctx.drawImage(hud, 354, 36, 24, 6, 
-	//			96, 10, 24, 50);
 	ctx.fillStyle = "black";
 	ctx.fillRect(96, 10 + offset, 24, 50);
-	///124
 	if(rupeeAmount < 100)
 	{
 		ctx.drawImage(hud, 519, 117, 8, 8, 
@@ -2026,7 +2147,7 @@ function drawHUD(offset)
 				96 + 16, 16 + offset, 8, 8);
 		let secondNum = Math.floor(rupeeAmount/10);
 		ctx.drawImage(hud, 528 + (8*secondNum) + (1*secondNum), 117, 8, 8, 
-				96 + 8, 16 + offset , 8, 8);
+				96 + 8, 16 + offset, 8, 8);
 	}
 	else{
 		let firstNum = rupeeAmount %10;
@@ -2107,7 +2228,6 @@ function addMapGameObjects(levelMap, objectArray)
 					gO.height = 16;
 					gO.newMap = currentMap + 16;
 					gO.newLinkX = (j * 16) + 1;
-					///changed for Lesson 19
 					gO.newLinkY = 65;
 					gO.isPortal = true;
 					gO.shiftsUpDown = true;
@@ -2124,7 +2244,6 @@ function addMapGameObjects(levelMap, objectArray)
 					gO.width = 16;
 					gO.height = 16;
 					gO.newMap = currentMap - 1;
-					///changed for Lesson 19
 					gO.newLinkX = 239;
 					gO.newLinkY = (i * 16) - 1;
 					gO.isPortal = true;
@@ -2154,7 +2273,6 @@ function addMapGameObjects(levelMap, objectArray)
 	}
 }
 
-///changed for Lesson 19
 function drawProjectiles()
 {
 	for(let i = 0; i < projectiles.length; i++)
@@ -2265,35 +2383,40 @@ function drawProjectiles()
 	}
 }
 
-function drawGameStart() {
-	ctx.fillStyle = "rgb(255,255,255)";
-	ctx.font = "20px Arial";
-	ctx.fillText("Push enter to start", 40, 120);
-}
-
-function drawInventoryScreen(offset) {
-	ctx.drawImage(hud, 1, 11, 256, 88, 0, -200 + offset, 256, 88);
-	ctx.drawImage(hud, 1, 112, 256, 88, 0, -112 + offset, 256, 88);
-	ctx.drawImage(hud, 519, 42, 96, 48, 80, -112 + offset + 16, 96, 48);
-	if(leftPressed && cursorX > 132) {
+function drawInventoryScreen(offset)
+{
+	ctx.drawImage(hud, 1, 11, 256, 88, 
+				0, -200 + offset, 256, 88);
+	ctx.drawImage(hud, 1, 112, 256, 88, 
+				0, -112 + offset, 256,  88);
+	ctx.drawImage(hud, 519, 42, 96, 48, 
+				 80, -112 + offset + 16, 96,  48);
+	if(leftPressed && cursorX > 132)
+	{
 		leftPressed = false;
 		cursorX -= 22;
-		playSound('./sounds/LOZ_text.wav');
-	} else if(rightPressed && cursorX < 196) {
+		playSound("./sounds/LOZ_text.wav");
+	}
+	if(rightPressed && cursorX < 196)
+	{
 		rightPressed = false;
 		cursorX += 22;
-		playSound('./sounds/LOZ_text.wav');
-	} else if(upPressed && cursorY + offset > 42) {
+		playSound("./sounds/LOZ_text.wav");
+	}
+	if(upPressed && cursorY + offset > 42)
+	{
 		upPressed = false;
 		cursorY -= 18;
-		playSound('./sounds/LOZ_text.wav');
-	} else if(downPressed && cursorY + offset < 43) {
+		playSound("./sounds/LOZ_text.wav");
+	}
+	if(downPressed && cursorY + offset < 43)
+	{
 		downPressed = false;
 		cursorY += 18;
-		playSound('./sounds/LOZ_text.wav');
+		playSound("./sounds/LOZ_text.wav");
 	}
-	ctx.drawImage(hud, 536, 137, 16, 16, 
-				cursorX, cursorY + offset, 16, 16);
+	ctx.drawImage(hud, 536, 137, 16, 16, cursorX, cursorY + offset, 16, 16);
+	
 	if(inventoryItems[0] != null)
 	{
 		ctx.drawImage(hud, 584, 137, 8, 16, 
@@ -2336,10 +2459,10 @@ function drawInventoryScreen(offset) {
 		ctx.drawImage(hud, 715, 137, 8, 16, 
 							200, 66 + offset - 200, 8, 16);
 	}
-	if(inventoryItems[8] != null)
+	if(inventoryItems[8] != null) //raft
 	{
 		ctx.drawImage(hud, 519, 156, 16, 16, 
-							156, 26 + offset - 200, 16, 16);
+							156, 26 + offset - 200,16, 16);
 	}
 	if(inventoryItems[9] != null)
 	{
@@ -2365,6 +2488,14 @@ function drawInventoryScreen(offset) {
 	{
 		ctx.drawImage(hud, 590, 156, 8, 16, 
 							212, 26 + offset - 200, 8, 16);
+	}
+	if(cursorX == 131 && cursorY == -152)
+	{
+		if(isAttacking)
+		{
+			currentEquippedItem = 0;
+			isAttacking = false;
+		}
 	}
 	if(cursorX == 153 && cursorY == -152)
 	{
@@ -2422,6 +2553,9 @@ function drawInventoryScreen(offset) {
 			isAttacking = false;
 		}
 	}
+	
+	//console.log("Cursorx: " + cursorX + "  and cursorY: " + cursorY);
+	
 	switch(currentEquippedItem)
 	{
 		case 0:
@@ -2461,46 +2595,67 @@ function drawInventoryScreen(offset) {
 	}
 }
 
+function drawGameStart()
+{
+	ctx.fillStyle = "rgb(255,255,255)";
+	ctx.font = "20px Arial";
+	ctx.fillText("Push enter to start", 40, 120);
+}
+
 function draw () {
-    setTimeout(function() {
-    requestAnimationFrame(draw);
-    ctx.fillStyle = "rgb(0,0,0)";
-    ctx.fillRect(0,0,256,240);
-    ///all code goes here
-    if(!hasGameStarted) {
+   setTimeout(function() {
+   requestAnimationFrame(draw);
+   ctx.fillStyle = "rgb(0,0,0)";
+   ctx.fillRect(0,0,256,240);
+   ///all code goes here
+   ///added for lesson 22
+   if(!hasGameStarted)
+	{
 		drawGameStart();
-    } else {
-		if(needInventoryScreen) {
-			if(!returnToGame) {
-				inventoryOffset += 2;
-				if(inventoryOffset > 184) {
+	}
+	else
+	{
+		if(needInventoryScreen)
+		{	
+			if(!returnToGame)
+			{
+				inventoryOffset+=2;
+				if(inventoryOffset > 184)
+				{
 					inventoryOffset = 184;
 				}
-			} else {
-				inventoryOffset -= 2;
-				if (inventoryOffset < 0) {
-					inventoryOffset = 0;						
+			}
+			else
+			{
+				inventoryOffset-=2;
+				if(inventoryOffset < 0)
+				{
+					inventoryOffset = 0;
 					needInventoryScreen = false;
 				}
 			}
 			drawInventoryScreen(inventoryOffset);
-		} else {
+		}
+		else
+		{
 			invincibleTime--;
-			if(invincibleTime <= 0) {
+			if(invincibleTime <= 0)
+			{
 				linkIsInvincible = false;
 			}
-	    	drawMap(gameMap);
-	    	drawLink();
-    		gameObjectCollision(linkX, linkY, gameObjects, true);
-    		drawGameObjects();
-    		drawProjectiles();
+			
+		   drawMap(gameMap);
+		   drawLink();
+		   gameObjectCollision(linkX, linkY, gameObjects, true, false, false, false, false);
+		   drawGameObjects();
+		   drawProjectiles();
+		   drawBombs();
 		}
 		drawHUD(inventoryOffset);
 	}
-	drawHUD();
-    },1000/fps);
+   
+   },1000/fps);
 }
-
 draw();
 
 </script>

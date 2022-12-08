@@ -12,11 +12,25 @@ function GameObject() {
   this.newMap = 0;
   this.newLinkX = -1;
   this.newLinkY = -1;
-  this.isPortal = false;
   this.shiftsLeftRight = false;
   this.shiftsUpDown = false;
+  this.isPortal = false;
+  this.isEnemy = false;
+  this.enemyType = 0;
+  this.nextX = 0;
+  this.nextY = 0;
+  this.isAttacking = false;
+  this.health = 0;
+  this.direction = "up";
+  this.enemyPath = [];
   this.counter = 0;
-  this.imageNum = 0;
+  this.frame = 0;
+  this.needsBounce = false;
+  this.bounceX = 0;
+  this.bounceY = 0;
+  this.isRupee = false;
+  this.rupeeValue = 1;
+  this.rupeeImage = 0;
   this.isText = false;
   this.line1Full = "";
   this.line2Full = "";
@@ -31,23 +45,8 @@ function GameObject() {
   this.pickUpItemNum = 0;
   this.isFlame = false;
   this.isOldWoman = false;
+  this.isSaleRupee = false;
   this.pickUpItemName = "";
-  this.isRupee = false;
-  this.rupeeValue = 1;
-  this.isEnemy = false;
-  this.enemyType = 0;
-  this.nextX = 0;
-  this.nextY = 0;
-  this.isAttacking = false;
-  this.health = 0;
-  this.direction = "up";
-  this.enemyPath = [];
-  this.counter = 0;
-  this.frame = 0;
-  this.needsBounce = false;
-  this.bounceX = 0;
-  this.bounceY = 0;
-  this.rupeeImage = 0;
   this.speed = 3;
   this.waterProjectile = false;
   this.angle = 0;
@@ -64,6 +63,9 @@ function GameObject() {
   this.fallAmount = 0;
   this.reachedJumpHeight = false;
   this.jumpDir = 0;
+  this.isBomb = false;
+  //added for 23
+  this.stairType = 0;
 }
 
 let gO = new GameObject();
@@ -107,6 +109,18 @@ let map1 = [
   [55, 55, 55, 55, 55, 55, 55, 18, 55, 55, 55, 55, 55, 55, 55, 55],
 ];
 let map1Objects = [];
+
+let gO1 = new GameObject();
+gO1.x = 9 * 16;
+gO1.y = 5 * 16;
+gO1.width = 16;
+gO1.height = 16;
+gO1.isBombable = true;
+gO1.bushType = 0;
+gO1.newMap = 132;
+gO1.enemyType = -1;
+map1Objects.push(gO1);
+
 bundle = new MapBundle(map1, map1Objects);
 maps.push(bundle);
 
@@ -2681,7 +2695,7 @@ gO.nextY = 10 * 16;
 gO.width = 16;
 gO.height = 16;
 gO.isEnemy = true;
-gO.enemyType = 1;
+gO.enemyType = 3;
 gO.isAttacking = false;
 gO.health = 1;
 gO.direction = "up";
@@ -2696,7 +2710,7 @@ gO.nextY = 8 * 16;
 gO.width = 16;
 gO.height = 16;
 gO.isEnemy = true;
-gO.enemyType = 1;
+gO.enemyType = 3;
 gO.isAttacking = false;
 gO.health = 1;
 gO.direction = "up";
@@ -3578,3 +3592,320 @@ maps.push(new MapBundle(map129, gameObjects129));
 /////////////////////////////////////////////////////////////////// -->
 
 ////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+let map130 = [
+  [22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22],
+  [22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22],
+  [22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22],
+  [22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22],
+  [55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55],
+  [55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55],
+  [55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
+  [55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
+  [55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
+  [55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
+  [55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
+  [55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
+  [55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
+  [55, 55, 37, 37, 37, 37, 37, 28, 28, 37, 37, 37, 37, 37, 55, 55],
+  [55, 55, 55, 55, 55, 55, 55, 28, 28, 55, 55, 55, 55, 55, 55, 55],
+];
+
+let gameObjects130 = [];
+///Portal variables
+gO = new GameObject();
+gO.x = 112;
+gO.y = 240;
+gO.width = 16;
+gO.height = 16;
+gO.newMap = 72;
+gO.newLinkX = 191;
+gO.newLinkY = 96;
+gO.isPortal = true;
+gameObjects130.push(gO);
+
+gO = new GameObject();
+gO.x = 128;
+gO.y = 240;
+gO.width = 16;
+gO.height = 16;
+gO.newMap = 72;
+gO.newLinkX = 191;
+gO.newLinkY = 96;
+gO.isPortal = true;
+gameObjects130.push(gO);
+
+gO = new GameObject();
+gO.x = 4 * 16 + 8;
+gO.y = 8 * 16;
+gO.width = 16;
+gO.height = 16;
+gO.isFlame = true;
+gameObjects130.push(gO);
+
+gO = new GameObject();
+gO.x = 10 * 16 + 8;
+gO.y = 8 * 16;
+gO.width = 16;
+gO.height = 16;
+gO.isFlame = true;
+gameObjects130.push(gO);
+
+gO = new GameObject();
+gO.x = 7 * 16 + 8;
+gO.y = 8 * 16;
+gO.width = 16;
+gO.height = 16;
+gO.isMoblin = true;
+gO.isSaleItem = true;
+gameObjects130.push(gO);
+
+gO = new GameObject();
+gO.isText = true;
+gO.line1Full = "IT'S A SECRET";
+gO.line2Full = "TO EVERYBODY.";
+gO.line1X = 5 * 16;
+gO.line1Y = 7 * 16;
+gO.line2X = 5 * 16;
+gO.line2Y = 8 * 16 - 6;
+gO.isSaleItem = false;
+gameObjects130.push(gO);
+
+// gO = new GameObject()
+// gO.x = (8*16);
+// gO.y = (9.5*16);
+// gO.width = 16;
+// gO.height = 16;
+// gO.isPickUpItem = false;
+// gO.isSaleItem = false;
+// gO.line1Full = "100";
+// gO.cost = 100;
+// gO.pickUpItemNum = -1;
+// gameObjects130.push(gO);
+
+gO = new GameObject();
+gO.x = 7 * 16 + 8;
+gO.y = 10 * 16;
+gO.width = 16;
+gO.height = 16;
+gO.isRupee = false;
+gO.isSaleRupee = true;
+gO.rupeeValue = 10;
+gO.shouldPersist = true;
+gameObjects130.push(gO);
+
+maps.push(new MapBundle(map130, gameObjects130));
+
+// gO71a.x = 11 * 16;
+//gO71a.y = 11 * 16;
+
+////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+let map131 = [
+  [22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22],
+  [22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22],
+  [22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22],
+  [22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22],
+  [55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55],
+  [55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55],
+  [55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
+  [55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
+  [55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
+  [55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
+  [55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
+  [55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
+  [55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
+  [55, 55, 37, 37, 37, 37, 37, 28, 28, 37, 37, 37, 37, 37, 55, 55],
+  [55, 55, 55, 55, 55, 55, 55, 28, 28, 55, 55, 55, 55, 55, 55, 55],
+];
+
+let gameObjects131 = [];
+///Portal variables
+gO = new GameObject();
+gO.x = 112;
+gO.y = 240;
+gO.width = 16;
+gO.height = 16;
+gO.newMap = 72;
+gO.newLinkX = 11 * 16;
+gO.newLinkY = 10 * 16 - 1;
+gO.isPortal = true;
+gameObjects131.push(gO);
+
+gO = new GameObject();
+gO.x = 128;
+gO.y = 240;
+gO.width = 16;
+gO.height = 16;
+gO.newMap = 72;
+gO.newLinkX = 11 * 16;
+gO.newLinkY = 10 * 16 - 1;
+gO.isPortal = true;
+gameObjects131.push(gO);
+
+gO = new GameObject();
+gO.x = 4 * 16 + 8;
+gO.y = 8 * 16;
+gO.width = 16;
+gO.height = 16;
+gO.isFlame = true;
+gameObjects131.push(gO);
+
+gO = new GameObject();
+gO.x = 10 * 16 + 8;
+gO.y = 8 * 16;
+gO.width = 16;
+gO.height = 16;
+gO.isFlame = true;
+gameObjects131.push(gO);
+
+gO = new GameObject();
+gO.x = 7 * 16 + 8;
+gO.y = 8 * 16;
+gO.width = 16;
+gO.height = 16;
+gO.isOldMan = true;
+gO.isSaleItem = true;
+gameObjects131.push(gO);
+
+gO = new GameObject();
+gO.isText = true;
+gO.line1Full = "TAKE ANY ONE YOU WANT.";
+gO.line2Full = "";
+gO.line1X = 3 * 16;
+gO.line1Y = 7 * 16;
+gO.line2X = 5 * 16;
+gO.line2Y = 8 * 16 - 6;
+gO.isSaleItem = false;
+gameObjects131.push(gO);
+
+gO = new GameObject();
+gO.x = 8 * 16;
+gO.y = 9.5 * 16;
+gO.width = 16;
+gO.height = 16;
+gO.isPickUpItem = true;
+gO.isSaleItem = false;
+gO.line1Full = "100";
+gO.cost = 100;
+gO.pickUpItemNum = 17;
+gameObjects131.push(gO);
+
+gO = new GameObject();
+gO.x = 8 * 16;
+gO.y = 9.5 * 16;
+gO.width = 16;
+gO.height = 16;
+gO.isPickUpItem = true;
+gO.isSaleItem = false;
+gO.line1Full = "100";
+gO.cost = 100;
+gO.pickUpItemNum = 17;
+gameObjects131.push(gO);
+
+maps.push(new MapBundle(map131, gameObjects131));
+
+////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+let map132 = [
+  [22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22],
+  [22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22],
+  [22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22],
+  [22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22],
+  [55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55],
+  [55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55],
+  [55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
+  [55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
+  [55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
+  [55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
+  [55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
+  [55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
+  [55, 55, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 55, 55],
+  [55, 55, 37, 37, 37, 37, 37, 28, 28, 37, 37, 37, 37, 37, 55, 55],
+  [55, 55, 55, 55, 55, 55, 55, 28, 28, 55, 55, 55, 55, 55, 55, 55],
+];
+
+let gameObjects132 = [];
+///Portal variables
+gO = new GameObject();
+gO.x = 112;
+gO.y = 240;
+gO.width = 16;
+gO.height = 16;
+gO.newMap = 1;
+gO.newLinkX = 9 * 16;
+gO.newLinkY = 6 * 16;
+gO.isPortal = true;
+gameObjects132.push(gO);
+
+gO = new GameObject();
+gO.x = 128;
+gO.y = 240;
+gO.width = 16;
+gO.height = 16;
+gO.newMap = 1;
+gO.newLinkX = 9 * 16;
+gO.newLinkY = 6 * 16;
+gO.isPortal = true;
+gameObjects132.push(gO);
+
+gO = new GameObject();
+gO.x = 4 * 16 + 8;
+gO.y = 8 * 16;
+gO.width = 16;
+gO.height = 16;
+gO.isFlame = true;
+gameObjects132.push(gO);
+
+gO = new GameObject();
+gO.x = 10 * 16 + 8;
+gO.y = 8 * 16;
+gO.width = 16;
+gO.height = 16;
+gO.isFlame = true;
+gameObjects132.push(gO);
+
+gO = new GameObject();
+gO.x = 7 * 16 + 8;
+gO.y = 8 * 16;
+gO.width = 16;
+gO.height = 16;
+gO.isMoblin = true;
+gO.isSaleItem = true;
+gameObjects132.push(gO);
+
+gO = new GameObject();
+gO.isText = true;
+gO.line1Full = "IT'S A SECRET";
+gO.line2Full = "TO EVERYBODY.";
+gO.line1X = 5 * 16;
+gO.line1Y = 7 * 16;
+gO.line2X = 5 * 16;
+gO.line2Y = 8 * 16 - 6;
+gO.isSaleItem = false;
+gameObjects132.push(gO);
+
+// gO = new GameObject()
+// gO.x = (8*16);
+// gO.y = (9.5*16);
+// gO.width = 16;
+// gO.height = 16;
+// gO.isPickUpItem = false;
+// gO.isSaleItem = false;
+// gO.line1Full = "100";
+// gO.cost = 100;
+// gO.pickUpItemNum = -1;
+// gameObjects130.push(gO);
+
+gO = new GameObject();
+gO.x = 7 * 16 + 8;
+gO.y = 10 * 16;
+gO.width = 16;
+gO.height = 16;
+gO.isRupee = false;
+gO.isSaleRupee = true;
+gO.rupeeValue = -20;
+gO.shouldPersist = true;
+gameObjects132.push(gO);
+
+maps.push(new MapBundle(map132, gameObjects132));
